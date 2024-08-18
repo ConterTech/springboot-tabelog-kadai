@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### application.propertiesを管理から外す ###
+application.properties
