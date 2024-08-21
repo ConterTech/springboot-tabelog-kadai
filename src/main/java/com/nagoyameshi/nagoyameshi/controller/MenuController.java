@@ -1,9 +1,14 @@
 package com.nagoyameshi.nagoyameshi.controller;
 
-public class MenuController {
-    private final MenuController menuRepository;
+import org.springframework.stereotype.Controller;
 
-    public MenuController(MenuController menuRepository){
+import com.nagoyameshi.nagoyameshi.repository.MenuRepository;
+
+@Controller
+public class MenuController {
+    private final MenuRepository menuRepository;
+
+    public MenuController(MenuRepository menuRepository){
         this.menuRepository = menuRepository;
     }
 }
