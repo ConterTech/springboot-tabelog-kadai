@@ -20,7 +20,6 @@ public class MenuPhotoEntity {
 
     @Id
     @JoinColumn(name = "menu_id")
-    @ManyToOne
     private Integer menuId;
 
     @Column(name = "photo_url")
