@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class CategoryController {
     private final CategoryRepository categoryRepository;
 
+    // 一覧表示
     @GetMapping("list")
     public String list(Model model){
         List<CategoryEntity> categories = categoryRepository.findAll();
@@ -31,16 +32,19 @@ public class CategoryController {
         return "index";
     }
 
+    // 検索
     @PostMapping("search")
     public String search(Model model, @ModelAttribute @Validated CategorySearchForm categorySearchForm){
         return "index";
     }
 
+    // 登録
     @PostMapping("register")
     public String register(Model model, @ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm){
         return "index";
     }
 
+    // 削除
     @GetMapping("delete")
     public String delete(Model model, @PathVariable(name = "category") Integer categoryId){
         return "index";
