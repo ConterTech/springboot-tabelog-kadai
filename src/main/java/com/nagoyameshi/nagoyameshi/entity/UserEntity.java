@@ -3,6 +3,8 @@ package com.nagoyameshi.nagoyameshi.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -26,8 +28,8 @@ public class UserEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "mail_address")
-    private String mailAddress;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "age")
     private Integer age;
@@ -38,8 +40,12 @@ public class UserEntity {
     @Column(name = "password")
     private String pasword;
 
-    @Column(name = "admin_flag")
-    private boolean adminFlag;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
 
     @Column(name = "paid_flag")
     private boolean paidFlag;

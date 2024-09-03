@@ -35,6 +35,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.16.0'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.3.2'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {

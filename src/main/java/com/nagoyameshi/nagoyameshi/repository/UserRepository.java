@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer>{
-    public Optional<UserEntity> findByMailAddress(String mailAddress);
+    public UserEntity findByEmail(String email);
     public Optional<UserEntity> findByUserId(Integer userId);
     public Page<UserEntity> findByName(String name, Pageable pageable);
 }

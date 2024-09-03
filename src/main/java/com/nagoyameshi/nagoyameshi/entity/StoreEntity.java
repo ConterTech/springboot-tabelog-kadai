@@ -20,6 +20,9 @@ public class StoreEntity {
     @Column(name = "store_name")
     private String storeName;
 
+    @Column(name = "image_name")
+    private String imageName;
+
     @Column(name = "post_code")
     private String postCode;
 

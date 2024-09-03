@@ -18,5 +18,5 @@ public class CategoryEntity {
     private String category;
 
     @Column(name = "delete_flag")
-    private boolean delete_flag;
+    private boolean deleteFlag;
 }
