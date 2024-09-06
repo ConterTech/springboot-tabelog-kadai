@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -37,6 +39,10 @@ public class StoreEntity {
 
     @Column(name = "store_describe")
     private String storeDescribe;
+
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity categoryId;
 
     @Column(name = "delete_flag")
     private boolean deleteFlag;

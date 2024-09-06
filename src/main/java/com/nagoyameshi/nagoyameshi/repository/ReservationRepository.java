@@ -1,12 +1,13 @@
 package com.nagoyameshi.nagoyameshi.repository;
 
-import java.util.Optional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.nagoyameshi.nagoyameshi.entity.ReservationEntity;
 import com.nagoyameshi.nagoyameshi.entity.Reservationpk;
+import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Reservationpk>{
-    public Optional<ReservationEntity> findByStoreIdAndUserId(Integer storeId, Integer userId);
+    public Page<ReservationEntity> findByUser(UserEntity user, Pageable pageable);
 }

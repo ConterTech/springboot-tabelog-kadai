@@ -26,7 +26,7 @@ import com.nagoyameshi.nagoyameshi.service.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("category")
+@RequestMapping("/category")
 @Controller
 @RequiredArgsConstructor
 public class CategoryController {
@@ -34,7 +34,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     // 一覧表示
-    @GetMapping("list")
+    @GetMapping("/list")
     public String list(Model model) {
         List<CategoryEntity> categories = categoryRepository.findAll();
         model.addAttribute("categories", categories);
@@ -42,7 +42,7 @@ public class CategoryController {
     }
 
     // 検索
-    @PostMapping("search")
+    @PostMapping("/search")
     public String search(Model model,
             @PageableDefault(page = 0, size = 10, sort = "catogryId", direction = Direction.ASC) Pageable pageable, @RequestParam(name = "keyword", required = false) String keyword) {
         Page<CategoryEntity> categoryPage;
@@ -58,7 +58,7 @@ public class CategoryController {
     }
 
     // 登録
-    @PostMapping("register")
+    @PostMapping("/register")
     public String register(Model model, @ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()){
             return "redirect:/index";
@@ -71,7 +71,7 @@ public class CategoryController {
     }
 
     // 削除
-    @GetMapping("delete")
+    @GetMapping("/delete")
     public String delete(Model model, @PathVariable(name = "category") Integer categoryId) {
         CategoryEntity category = categoryRepository.findByCategoryId(categoryId);
         category.setDeleteFlag(true);

@@ -6,11 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nagoyameshi.nagoyameshi.entity.StoreBusinessTimeEntity;
 import com.nagoyameshi.nagoyameshi.entity.StoreEntity;
 import com.nagoyameshi.nagoyameshi.entity.StoreSpecialBusinessTimeEntity;
+import com.nagoyameshi.nagoyameshi.form.ReservationInputForm;
 import com.nagoyameshi.nagoyameshi.repository.FavoriteRepository;
 import com.nagoyameshi.nagoyameshi.repository.ReviewRepository;
 import com.nagoyameshi.nagoyameshi.repository.StoreBusinessTimeRepository;
@@ -40,7 +42,21 @@ public class StoreController {
         model.addAttribute("store", store);
         model.addAttribute("storeBusinessTime", storeBusinessTime);
         model.addAttribute("storeSpecialBusinessTime", storeSpecialBusinessTime);
+        model.addAttribute("reservationForm", new ReservationInputForm());
 
         return "index";
     }
+
+    // お気に入り追加
+    @PostMapping("/{id}/addFavorite")
+    public String addFavorite(){
+        return "index";
+    }
+
+    // お気に入り削除
+    @PostMapping("/{id}/deleteFavorite")
+    public String deleteFavorite(){
+        return "index";
+    }
+
 }

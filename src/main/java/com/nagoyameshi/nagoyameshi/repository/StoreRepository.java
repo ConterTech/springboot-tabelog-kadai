@@ -10,5 +10,6 @@ import com.nagoyameshi.nagoyameshi.entity.StoreEntity;
 
 public interface StoreRepository extends JpaRepository<StoreEntity, Integer>{
     public Page<StoreEntity> findByStoreNameLike(String keyword, Pageable pageable);
+    public Page<StoreEntity> findByCategoryId(Integer categoryId, Pageable pageable);
     public Optional<StoreEntity> findByStoreId(Integer storeId);
 }

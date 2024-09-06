@@ -2,7 +2,6 @@ package com.nagoyameshi.nagoyameshi.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nagoyameshi.nagoyameshi.repository.UserRepository;
@@ -10,26 +9,20 @@ import com.nagoyameshi.nagoyameshi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/admin/user")
 @RequiredArgsConstructor
-public class UserController {
+public class AdminUserController {
     private final UserRepository userRepository;
 
-    // ユーザ情報表示
+    // 管理者ユーザ情報一覧表示
     @GetMapping
     public String index(){
         return "index";
     }
-    
-    // 編集画面表示
-    @GetMapping("/edit")
-    public String edit(){
-        return "index";
-    }
 
-    // 編集
-    @PostMapping("/update")
-    public String update(){
+    // 管理者ユーザ情報詳細表示
+    @GetMapping("/{id}")
+    public String show(){
         return "index";
     }
 }

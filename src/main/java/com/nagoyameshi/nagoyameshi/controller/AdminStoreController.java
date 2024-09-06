@@ -43,7 +43,7 @@ public class AdminStoreController {
         if (StringUtils.isEmpty(keyword)) {
             storePage = storeRepository.findAll(pageable);
         } else {
-            storePage = storeRepository.findByStoreNameLike("%" + keyword, pageable);
+            storePage = storeRepository.findByStoreNameLike(keyword + "%", pageable);
         }
 
         model.addAttribute("storePage", storePage);

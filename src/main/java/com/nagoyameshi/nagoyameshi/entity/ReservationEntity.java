@@ -1,6 +1,7 @@
 package com.nagoyameshi.nagoyameshi.entity;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ public class ReservationEntity {
     private Integer userId;
 
     @Column(name = "checkin_time")
-    private Time checkinTime;
+    private LocalDateTime checkinTime;
 
     @Column(name = "number_of_people")
     private Integer numberOfPeople;
