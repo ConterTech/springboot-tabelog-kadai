@@ -40,6 +40,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // ユーザ編集
+    @Transactional
+    public void update(UserEditForm userEditForm){
+        UserEntity user = userRepository.getReferenceById(userEditForm.getUserId());
+
+        user.setName(null);
+        
+    }
+
     // メールアドレスが登録済みかどうかチェックする
     public boolean isEmailRegistered(String email) {
         UserEntity user = userRepository.findByEmail(email);

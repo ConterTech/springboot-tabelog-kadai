@@ -35,7 +35,7 @@ public class UserEntity {
     private Integer age;
 
     @Column(name = "gender")
-    private Integer gender;
+    private String gender;
 
     @Column(name = "password")
     private String pasword;

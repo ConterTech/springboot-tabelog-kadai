@@ -27,7 +27,7 @@ public class UserEditForm {
     private String email;
 
     @NotEmpty(message = "年齢を入力してください。")
-    private String age;
+    private Integer age;
 
     @NotEmpty(message = "性別を入力してください。")
     private String gender;

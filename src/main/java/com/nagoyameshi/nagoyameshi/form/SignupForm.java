@@ -26,7 +26,7 @@ public class SignupForm {
     private Integer age;
 
     @NotEmpty(message = "性別を入力してください。")
-    private Integer gender;
+    private String gender;
 
     @NotEmpty(message = "パスワードを入力してください。")
     @Length(min = 8, message = "パスワードは8文字以上で入力してください。")
