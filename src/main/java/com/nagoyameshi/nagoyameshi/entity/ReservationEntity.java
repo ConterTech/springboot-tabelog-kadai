@@ -18,11 +18,11 @@ import lombok.Data;
 public class ReservationEntity {
     @Id
     @JoinColumn(name = "store_id")
-    private Integer storeId;
+    private StoreEntity storeId;
 
     @Id
     @JoinColumn(name = "user_id")
-    private Integer userId;
+    private UserEntity userId;
 
     @Column(name = "checkin_time")
     private LocalDateTime checkinTime;

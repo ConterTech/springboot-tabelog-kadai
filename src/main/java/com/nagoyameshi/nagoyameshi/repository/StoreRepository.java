@@ -1,5 +1,6 @@
 package com.nagoyameshi.nagoyameshi.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -12,4 +13,6 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Integer>{
     public Page<StoreEntity> findByStoreNameLike(String keyword, Pageable pageable);
     public Page<StoreEntity> findByCategoryId(Integer categoryId, Pageable pageable);
     public Optional<StoreEntity> findByStoreId(Integer storeId);
+
+    public Page<StoreEntity> findByStoreIdIn(List<Integer> storeList, Pageable pageable);
 }

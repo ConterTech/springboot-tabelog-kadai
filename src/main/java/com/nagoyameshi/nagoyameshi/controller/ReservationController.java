@@ -36,7 +36,7 @@ public class ReservationController {
             @PageableDefault(page = 0, size = 10, sort = "storeId", direction = Direction.ASC) Pageable pageable,
             Model model) {
         UserEntity user = userDetailsImpl.getUser();
-        Page<ReservationEntity> reservationPage = reservationRepository.findByUser(user, pageable);
+        Page<ReservationEntity> reservationPage = reservationRepository.findByUserId(user, pageable);
 
         model.addAttribute(reservationPage);
         return "index";

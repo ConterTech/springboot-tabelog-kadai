@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nagoyameshi.nagoyameshi.entity.ReservationEntity;
 import com.nagoyameshi.nagoyameshi.form.ReservationRegisterForm;
 import com.nagoyameshi.nagoyameshi.repository.ReservationRepository;
+import com.nagoyameshi.nagoyameshi.repository.StoreRepository;
+import com.nagoyameshi.nagoyameshi.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void create(ReservationRegisterForm reservationRegisterForm){
@@ -22,8 +26,8 @@ public class ReservationService {
         
         LocalDateTime checkinTime = LocalDateTime.parse(reservationRegisterForm.getCheckinTime());
 
-        reservation.setStoreId(reservationRegisterForm.getStoreId());
-        reservation.setUserId(reservationRegisterForm.getUserId());
+        reservation.setStoreId(storeRepository.getReferenceById(reservationRegisterForm.getStoreId()));
+        reservation.setUserId(userRepository.getReferenceById(reservationRegisterForm.getUserId()));
         reservation.setCheckinTime(checkinTime);
         reservation.setNumberOfPeople(reservationRegisterForm.getNumberOfPeople());
         reservation.setRemarks(reservationRegisterForm.getRemarks());

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -18,8 +19,9 @@ public class FavoriteEntity {
     private Integer storeId;
 
     @Id
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private Integer userId;
+    private UserEntity userId;
 
     @Column(name = "delete_flag")
     private boolean deleteFlag; 

@@ -9,5 +9,5 @@ import com.nagoyameshi.nagoyameshi.entity.Reservationpk;
 import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Reservationpk>{
-    public Page<ReservationEntity> findByUser(UserEntity user, Pageable pageable);
+    public Page<ReservationEntity> findByUserId(UserEntity user, Pageable pageable);
 }

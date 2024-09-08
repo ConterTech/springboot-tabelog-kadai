@@ -2,6 +2,7 @@ package com.nagoyameshi.nagoyameshi.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.nagoyameshi.nagoyameshi.entity.StoreBusinessTimeEntity;
 import com.nagoyameshi.nagoyameshi.entity.StoreEntity;
 import com.nagoyameshi.nagoyameshi.entity.StoreSpecialBusinessTimeEntity;
+import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.form.ReservationInputForm;
 import com.nagoyameshi.nagoyameshi.repository.FavoriteRepository;
 import com.nagoyameshi.nagoyameshi.repository.ReviewRepository;
 import com.nagoyameshi.nagoyameshi.repository.StoreBusinessTimeRepository;
 import com.nagoyameshi.nagoyameshi.repository.StoreRepository;
 import com.nagoyameshi.nagoyameshi.repository.StoreSpecialBusinessTimeRepository;
+import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
+import com.nagoyameshi.nagoyameshi.service.FavoriteService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,9 +34,10 @@ public class StoreController {
     private final StoreSpecialBusinessTimeRepository storeSpecialBusinessTimeRepository;
     private final ReviewRepository reviewRepository;
     private final FavoriteRepository favoriteRepository;
+    private final FavoriteService favoriteService;
 
     // 店舗詳細ページ
-    @GetMapping("/{id}")
+    @GetMapping("/{storeId}")
     public String show(@PathVariable(name = "storeId") Integer storeId, Model model) {
         StoreEntity store = storeRepository.getReferenceById(storeId);
         List<StoreBusinessTimeEntity> storeBusinessTime = storeBusinessTimeRepository.findByStoreId(storeId);
@@ -48,15 +53,26 @@ public class StoreController {
     }
 
     // お気に入り追加
-    @PostMapping("/{id}/addFavorite")
-    public String addFavorite(){
-        return "index";
+    @PostMapping("/{storeId}/addFavorite")
+    public String addFavorite(@PathVariable(name = "storeId") Integer storeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        Integer userId = userDetailsImpl.getUser().getUserId();
+
+        favoriteService.add(userId, storeId);
+
+        return "redirect:/store/{storeId}";
     }
 
     // お気に入り削除
-    @PostMapping("/{id}/deleteFavorite")
-    public String deleteFavorite(){
-        return "index";
-    }
+    @PostMapping("/{storeId}/deleteFavorite")
+    public String deleteFavorite(@PathVariable(name = "storeId") Integer storeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
 
+        UserEntity user = userDetailsImpl.getUser();
+        Integer userId = userDetailsImpl.getUser().getUserId();
+
+        favoriteRepository.deleteByUserIdAndStoreId(user, storeId);
+
+        return "redirect:/store/{storeId}";
+    }
 }
