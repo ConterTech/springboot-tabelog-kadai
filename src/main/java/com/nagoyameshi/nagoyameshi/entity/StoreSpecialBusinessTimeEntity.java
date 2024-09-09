@@ -1,5 +1,6 @@
 package com.nagoyameshi.nagoyameshi.entity;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import jakarta.persistence.Column;
@@ -7,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -16,12 +18,13 @@ import lombok.Data;
 @IdClass(value = StoreSpecialBusinessTimepk.class)
 public class StoreSpecialBusinessTimeEntity {
     @Id
+    @ManyToOne
     @JoinColumn(name = "store_id")
-    private Integer storeId;
+    private StoreEntity storeId;
 
     @Id
     @Column(name = "special_business_day")
-    private Integer specialBusinessDay;
+    private LocalDate specialBusinessDay;
 
     @Column(name = "business_start_time")
     private LocalTime businessStartTime;

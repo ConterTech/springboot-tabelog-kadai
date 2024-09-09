@@ -82,7 +82,7 @@ public class AdminStoreController {
         String imageName = store.getImageName();
         StoreEditForm storeEditForm = new StoreEditForm(store.getStoreId(), store.getStoreName(), null,
                 store.getPostCode(), store.getAddress(), store.getPhoneNumber(), store.getParkingStorage(),
-                store.getStoreDescribe());
+                store.getStoreDescribe(), store.getCategoryId());
 
         model.addAttribute("imageName", imageName);
         model.addAttribute("storeEditForm", storeEditForm);

@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/stores")
+@RequestMapping("/store")
 public class StoreController {
     private final StoreRepository storeRepository;
     private final StoreBusinessTimeRepository storeBusinessTimeRepository;
@@ -40,9 +40,9 @@ public class StoreController {
     @GetMapping("/{storeId}")
     public String show(@PathVariable(name = "storeId") Integer storeId, Model model) {
         StoreEntity store = storeRepository.getReferenceById(storeId);
-        List<StoreBusinessTimeEntity> storeBusinessTime = storeBusinessTimeRepository.findByStoreId(storeId);
+        List<StoreBusinessTimeEntity> storeBusinessTime = storeBusinessTimeRepository.findByStoreId(store);
         List<StoreSpecialBusinessTimeEntity> storeSpecialBusinessTime = storeSpecialBusinessTimeRepository
-                .findByStoreId(storeId);
+                .findByStoreId(store);
 
         model.addAttribute("store", store);
         model.addAttribute("storeBusinessTime", storeBusinessTime);
@@ -67,11 +67,10 @@ public class StoreController {
     @PostMapping("/{storeId}/deleteFavorite")
     public String deleteFavorite(@PathVariable(name = "storeId") Integer storeId,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-
         UserEntity user = userDetailsImpl.getUser();
-        Integer userId = userDetailsImpl.getUser().getUserId();
+        StoreEntity store = storeRepository.getReferenceById(storeId);
 
-        favoriteRepository.deleteByUserIdAndStoreId(user, storeId);
+        favoriteRepository.deleteByUserIdAndStoreId(user, store);
 
         return "redirect:/store/{storeId}";
     }

@@ -3,16 +3,19 @@ package com.nagoyameshi.nagoyameshi.entity;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Embeddable
 @Data
 public class Reviewpk {
     @Id
+    @ManyToOne
     @JoinColumn(name = "store_id")
-    private Integer storeId;
+    private StoreEntity storeId;
 
     @Id
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private Integer userId;
+    private UserEntity userId;
 }

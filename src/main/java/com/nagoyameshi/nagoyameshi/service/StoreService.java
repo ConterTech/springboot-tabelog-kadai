@@ -42,6 +42,7 @@ public class StoreService {
         store.setPhoneNumber(storeRegisterForm.getPhoneNumber());
         store.setParkingStorage(storeRegisterForm.getParkingStorage());
         store.setStoreDescribe(storeRegisterForm.getStoreDescribe());
+        store.setCategoryId(storeRegisterForm.getCategoryId());
 
         storeRepository.save(store);
     }
@@ -66,6 +67,7 @@ public class StoreService {
         store.setPhoneNumber(storeEditForm.getPhoneNumber());
         store.setParkingStorage(storeEditForm.getParkingStorage());
         store.setStoreDescribe(storeEditForm.getStoreDescribe());
+        store.setCategoryId(storeEditForm.getCategoryId());
 
         storeRepository.save(store);
     }

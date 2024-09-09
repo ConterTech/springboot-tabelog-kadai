@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.nagoyameshi.nagoyameshi.entity.StoreBusinessTimeEntity;
 import com.nagoyameshi.nagoyameshi.entity.StoreBusinessTimepk;
+import com.nagoyameshi.nagoyameshi.entity.StoreEntity;
 
 public interface StoreBusinessTimeRepository extends JpaRepository<StoreBusinessTimeEntity, StoreBusinessTimepk>{
-    public List<StoreBusinessTimeEntity> findByStoreId(Integer storeId);
+    public List<StoreBusinessTimeEntity> findByStoreId(StoreEntity storeId);
 }

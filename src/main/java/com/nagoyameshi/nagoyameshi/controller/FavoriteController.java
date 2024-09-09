@@ -36,13 +36,12 @@ public class FavoriteController {
             Model model) {
 
         UserEntity user = userDetailsImpl.getUser();
-        Integer userId = userDetailsImpl.getUser().getUserId();
 
         List<FavoriteEntity> favorites = favoriteRepository.findByUserId(user);
-        List<Integer> storeIdList = new ArrayList<>();
+        List<StoreEntity> storeIdList = new ArrayList<>();
 
         for (FavoriteEntity favorite : favorites) {
-            Integer storeId = favorite.getStoreId();
+            StoreEntity storeId = favorite.getStoreId();
             storeIdList.add(storeId);
         }
 

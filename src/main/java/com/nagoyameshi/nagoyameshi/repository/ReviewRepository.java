@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.nagoyameshi.nagoyameshi.entity.ReviewEntity;
 import com.nagoyameshi.nagoyameshi.entity.Reviewpk;
+import com.nagoyameshi.nagoyameshi.entity.StoreEntity;
+import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Reviewpk>{
-    public Page<ReviewEntity> findByStoreId(Integer storeId, Pageable pageable);
-    public ReviewEntity findByStoreIdAndUserId(Integer storeId, Integer userId);
+    public Page<ReviewEntity> findByStoreId(StoreEntity storeId, Pageable pageable);
+    public ReviewEntity findByStoreIdAndUserId(StoreEntity storeId, UserEntity userId);
 }

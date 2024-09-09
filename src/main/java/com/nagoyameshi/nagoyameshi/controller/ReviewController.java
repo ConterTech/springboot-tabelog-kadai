@@ -44,8 +44,8 @@ public class ReviewController {
             @PageableDefault(page = 0, size = 10, sort = "storeId", direction = Direction.ASC) Pageable pageable,
             Model model) {
 
-        Page<ReviewEntity> review = reviewRepository.findByStoreId(storeId, pageable);
-        StoreEntity store = storeRepository.getReferenceById(storeId);
+        StoreEntity store = storeRepository.getReferenceById(storeId);      
+        Page<ReviewEntity> review = reviewRepository.findByStoreId(store, pageable);
 
         model.addAttribute(store);
         model.addAttribute(review);
@@ -97,8 +97,8 @@ public class ReviewController {
     public String edit(@PathVariable(name = "storeId") Integer storeId,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
         StoreEntity store = storeRepository.getReferenceById(storeId);
-        Integer userId = userDetailsImpl.getUser().getUserId();
-        ReviewEntity review = reviewRepository.findByStoreIdAndUserId(userId, storeId);
+        UserEntity user = userDetailsImpl.getUser();
+        ReviewEntity review = reviewRepository.findByStoreIdAndUserId(store, user);
         ReviewEditForm reviewEditForm = new ReviewEditForm(review.getReviewStar(), review.getReviewText());
 
         model.addAttribute(store);
@@ -132,8 +132,9 @@ public class ReviewController {
     // レビュー削除
     @PostMapping("{storeId}/delete")
     public String delete(@PathVariable(name = "storeId") Integer storeId, UserDetailsImpl userDetailsImpl, Model model) {
-        Integer userId = userDetailsImpl.getUser().getUserId();
-        ReviewEntity review = reviewRepository.findByStoreIdAndUserId(storeId, userId);
+        StoreEntity store = storeRepository.getReferenceById(storeId);
+        UserEntity user = userDetailsImpl.getUser();
+        ReviewEntity review = reviewRepository.findByStoreIdAndUserId(store, user);
         review.setDeleteFlag(true);
         reviewRepository.save(review);
         

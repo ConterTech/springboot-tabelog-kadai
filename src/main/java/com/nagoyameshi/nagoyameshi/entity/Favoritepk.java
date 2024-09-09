@@ -10,8 +10,9 @@ import lombok.Data;
 @Data
 public class Favoritepk {
     @Id
+    @ManyToOne
     @JoinColumn(name = "store_id")
-    private Integer storeId;
+    private StoreEntity storeId;
 
     @Id
     @ManyToOne

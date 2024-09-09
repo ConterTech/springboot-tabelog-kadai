@@ -2,6 +2,8 @@ package com.nagoyameshi.nagoyameshi.form;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nagoyameshi.nagoyameshi.entity.CategoryEntity;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -27,4 +29,7 @@ public class StoreRegisterForm {
 
     @NotEmpty(message = "店舗説明を入力してください。")
     private String storeDescribe;
+
+    @NotNull(message = "カテゴリを選択してください。")
+    private CategoryEntity categoryId;
 }
