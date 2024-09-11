@@ -10,11 +10,43 @@
 </head>
 
 <body>
-    <div class="samuraitravel-wrapper">
+    <div class="nagoyameshi-wrapper">
         <!-- ヘッダー -->
         <div th:replace="~{fragment :: header}"></div>
 
-        <main></main>
+        <main>
+            <div class="container pb-5">
+                <div class="row justify-content-center">
+                    <!-- 検索窓 -->
+                    <div class="card mb-3">
+                        <div class="card-header">店舗名で検索</div>
+                        <form method="get" th:action="@{/index}" class="w-100">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="store" th:value="${store}"
+                                    placeholder="店舗名">
+                                <button type="submit" class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- カテゴリ絞込 -->
+                    <div class="card mb-3">
+                        <div class="card-header">カテゴリで探す</div>
+                        <form method="get" th:action="@{/index}" class="w-100">
+                            <div class="form-group mb-3">
+                                <select class="form-control form-select" name="category" th:value="${categoryId}">
+                                    <option value="" hidden>選択してください</option>
+                                    <option th:each="category : ${categoryList}"
+                                        th:value="${category.categoryId} th:text=${category.category}"
+                                        th:selected="${category.categoryId} == ${categoryId}"></option>
+                                    <option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card mb-3"></div>
+                </div>
+            </div>
+        </main>
 
         <!-- フッター -->
         <div th:replace="~{fragment :: footer}"></div>
