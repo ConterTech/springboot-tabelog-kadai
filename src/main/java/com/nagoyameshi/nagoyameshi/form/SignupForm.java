@@ -3,6 +3,7 @@ package com.nagoyameshi.nagoyameshi.form;
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -22,7 +23,7 @@ public class SignupForm {
     @NotEmpty(message = "メールアドレスを入力してください。")
     private String email;
 
-    @NotEmpty(message = "年齢を入力してください。")
+    @NotNull(message = "年齢を入力してください。")
     private Integer age;
 
     @NotEmpty(message = "性別を入力してください。")

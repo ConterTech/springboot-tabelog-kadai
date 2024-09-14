@@ -21,7 +21,7 @@ public class UserDetailsImpl implements UserDetails {
     // ハッシュ化済みのパスワードを返す
     @Override
     public String getPassword(){
-        return user.getPasword();
+        return user.getPassword();
     }
 
     // ログイン時に利用するユーザー名（メールアドレス）を返す

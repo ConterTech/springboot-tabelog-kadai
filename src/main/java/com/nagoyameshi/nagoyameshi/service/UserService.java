@@ -33,9 +33,9 @@ public class UserService {
         user.setEmail(signupForm.getEmail());
         user.setAge(signupForm.getAge());
         user.setGender(signupForm.getGender());
-        user.setPasword(passwordEncoder.encode(signupForm.getPassword()));
+        user.setPassword(passwordEncoder.encode(signupForm.getPassword()));
         user.setRole(role);
-        user.setEnabled(true);
+        user.setEnabled(false);
 
         return userRepository.save(user);
     }

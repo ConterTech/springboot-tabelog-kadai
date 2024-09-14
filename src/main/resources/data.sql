@@ -13,11 +13,22 @@ INSERT IGNORE INTO store (store_id, store_name, image_name, post_code, address, 
 
 
 -- roleテーブル
-INSERT IGNORE INTO role (role_id, name, delete_flag) VALUES (1, 'ROLE_GENERAL', 0);
-INSERT IGNORE INTO role (role_id, name, delete_flag) VALUES (2, 'ROLE_ADMIN', 0);
+INSERT IGNORE INTO role (id, name, delete_flag) VALUES (1, 'ROLE_GENERAL', 0);
+INSERT IGNORE INTO role (id, name, delete_flag) VALUES (2, 'ROLE_ADMIN', 0);
 
 -- userテーブル
-INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role, enabled, paid_flag, delete_flag) VALUES (1, '侍　太郎', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'taro.samurai@example.com', 27, 1, 'password', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (1, '侍　太郎', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'taro.samurai@example.com', 27, '男性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (2, '侍　花子', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'hanako.samurai@example.com', 27, '女性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 2, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (3, '侍　義勝', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'yoshikatsu.samurai@example.com', 27, '男性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (4, '侍　幸巳', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'sachimi.samurai@example.com', 27, '男性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (5, '侍　みやび', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'miyabi.samurai@example.com', 27, '男性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (6, '侍　正康', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'masayasu.samurai@example.com', 27, '男性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (7, '侍　由美子', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'yumiko.samurai@example.com', 27, '女性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (8, '侍　真由美', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'mayumi.samurai@example.com', 27, '女性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (9, '侍　康子', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'yasuko.samurai@example.com', 27, '男性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (10, '侍　昭美', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'yoshimi.samurai@example.com', 27, '男性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+INSERT IGNORE INTO user (user_id, name, phone_number, post_code, address, email, age, gender, password, role_id, enabled, paid_flag, delete_flag) VALUES (11, '侍　信平', '080-3333-5555', '111-1111', '宮城県太田市xxx', 'nobuhira.samurai@example.com', 27, '男性', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true, 0, 0);
+
 
 -- categoryテーブル
 INSERT IGNORE INTO category (category_id, category, delete_flag) VALUES (1, '焼き鳥', 0);
