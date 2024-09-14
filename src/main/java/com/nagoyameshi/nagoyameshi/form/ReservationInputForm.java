@@ -17,7 +17,4 @@ public class ReservationInputForm {
     private Integer numberOfPeople;
 
     private String remarks;
-
-    @NotEmpty(message = "ストアIDが存在しません。")
-    private Integer storeId;
 }

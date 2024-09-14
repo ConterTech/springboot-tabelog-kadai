@@ -29,7 +29,7 @@ public class HomeController {
     // homeページ
     @GetMapping
     public String index(@RequestParam(name = "store", required = false, defaultValue = "") String store,
-            @RequestParam(name = "category", required = false) Integer category,
+            @RequestParam(name = "categoryId", required = false, defaultValue = "") Integer categoryId,
             @PageableDefault(page = 0, size = 10, sort = "storeId", direction = Direction.ASC) Pageable pageable,
             Model model) {
 
@@ -39,15 +39,17 @@ public class HomeController {
 
         if (StringUtils.isNotEmpty(store)) {
             storePage = storeRepository.findByStoreNameLike(store + "%", pageable);
-        } else if (category != null) {
+        } else if (categoryId != null) {
+            CategoryEntity category = categoryRepository.getReferenceById(categoryId);
             storePage = storeRepository.findByCategoryId(category, pageable);
         } else {
             storePage = storeRepository.findAll(pageable);
         }
 
-        model.addAttribute(storePage);
-        model.addAttribute(store);
-        model.addAttribute(categoryList);
+        model.addAttribute("storePage", storePage);
+        model.addAttribute("store", store);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("categoryList", categoryList);
 
         return "index";
     }

@@ -31,14 +31,14 @@ public class AuthController {
     // ログイン
     @GetMapping("/login")
     public String login() {
-        return "index";
+        return "auth/login";
     }
 
     // 新規会員登録画面表示
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("signupForm", new SignupForm());
-        return "index";
+        return "auth/signup";
     }
 
     // 新規会員登録

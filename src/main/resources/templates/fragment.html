@@ -34,6 +34,44 @@
                 <a class="navbar-brand" th:href="@{/}">
                     <h1>NAGOYAMESHI</h1>
                 </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto">
+                        <!-- 未ログイン -->
+                        <li class="nav-item" sec:authorize="isAnonymous()">
+                            <a class="nav-link" th:href="@{/login}">ログイン</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAnonymous()">
+                            <a class="nav-link" th:href="@{/signup}">会員登録</a>
+                        </li>
+                        <!-- 無料会員 -->
+                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_GENERAL')">
+                            <a id="navbarDropdownGeneral" class="nav-link dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <span sec:authentication="principal.user.name"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownGeneral">
+                                <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/user}">会員情報</a>
+                                <div class="dropdown-divider"></div>
+
+                                <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/logout}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    ログアウト
+                                </a>
+                                <form class="d-none" id="logout-form" th:action="@{/logout}" method="post"></form>
+                            </div>
+                        </li>
+                        <!-- 有料会員 -->
+                        <!-- 管理者 -->
+                    </ul>
+                </div>
             </div>
         </nav>
     </div>
