@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/stores")
+@RequestMapping("/admin/store")
 public class AdminStoreController {
     private final StoreRepository storeRepository;
     private final StoreService storeService;
@@ -36,7 +36,7 @@ public class AdminStoreController {
     @GetMapping
     public String indexAdmin(Model model,
             @PageableDefault(page = 0, size = 10, sort = "storeId", direction = Direction.ASC) Pageable pageable,
-            @RequestParam(name = "keyword", required = false) String keyword) {
+            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword) {
 
         Page<StoreEntity> storePage;
 
@@ -49,7 +49,7 @@ public class AdminStoreController {
         model.addAttribute("storePage", storePage);
         model.addAttribute("keyword", keyword);
 
-        return "index";
+        return "admin/store/index";
     }
 
     // 管理者店舗登録画面表示

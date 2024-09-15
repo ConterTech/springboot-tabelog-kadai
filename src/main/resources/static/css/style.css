@@ -78,6 +78,15 @@ footer {
     opacity: 0.8;
 }
 
+.nagoyameshi-btn-danger {
+    background-color: #f2594b !important;
+    transition: 0.1s;
+}
+
+.nagoyameshi-btn-danger:hover {
+  opacity: 0.8;   
+}
+
 .nagoyameshi-dropdown-item:active {
     background-color: #5196a6;
 }
