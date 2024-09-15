@@ -26,41 +26,38 @@ import com.nagoyameshi.nagoyameshi.service.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/category")
+@RequestMapping("/admin/category")
 @Controller
 @RequiredArgsConstructor
-public class CategoryController {
+public class AdminCategoryController {
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
 
     // 一覧表示
-    @GetMapping("/list")
-    public String list(Model model) {
-        List<CategoryEntity> categories = categoryRepository.findAll();
-        model.addAttribute("categories", categories);
-        return "index";
-    }
+    @GetMapping
+    public String index(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+            @PageableDefault(page = 0, size = 10, sort = "categoryId", direction = Direction.ASC) Pageable pageable,
+            Model model) {
 
-    // 検索
-    @PostMapping("/search")
-    public String search(Model model,
-            @PageableDefault(page = 0, size = 10, sort = "catogryId", direction = Direction.ASC) Pageable pageable, @RequestParam(name = "keyword", required = false) String keyword) {
         Page<CategoryEntity> categoryPage;
 
-        if(StringUtils.isEmpty(keyword)){
+        if (StringUtils.isEmpty(keyword)) {
             categoryPage = categoryRepository.findAll(pageable);
-        }else {
-            categoryPage = categoryRepository.findByCategoryLike("%" + keyword, pageable);
+        } else {
+            categoryPage = categoryRepository.findByCategoryLike(keyword + "%", pageable);
         }
-        model.addAttribute("categoryPage", categoryPage);
+
         model.addAttribute("keyword", keyword);
-        return "index";
+        model.addAttribute("categoryPage", categoryPage);
+
+        return "admin/category/index";
     }
 
     // 登録
     @PostMapping("/register")
-    public String register(Model model, @ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if(bindingResult.hasErrors()){
+    public String register(Model model, @ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
             return "redirect:/index";
         }
 

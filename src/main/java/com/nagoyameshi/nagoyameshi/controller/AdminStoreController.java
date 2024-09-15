@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,10 +24,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nagoyameshi.nagoyameshi.entity.CategoryEntity;
 import com.nagoyameshi.nagoyameshi.entity.StoreEntity;
+import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.form.StoreEditForm;
 import com.nagoyameshi.nagoyameshi.form.StoreRegisterForm;
 import com.nagoyameshi.nagoyameshi.repository.CategoryRepository;
 import com.nagoyameshi.nagoyameshi.repository.StoreRepository;
+import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
 import com.nagoyameshi.nagoyameshi.service.StoreService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,9 +46,11 @@ public class AdminStoreController {
     @GetMapping
     public String indexAdmin(Model model,
             @PageableDefault(page = 0, size = 10, sort = "storeId", direction = Direction.ASC) Pageable pageable,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword) {
 
         Page<StoreEntity> storePage;
+        UserEntity user = userDetailsImpl.getUser();
 
         if (StringUtils.isEmpty(keyword)) {
             storePage = storeRepository.findAll(pageable);
@@ -54,6 +60,7 @@ public class AdminStoreController {
 
         model.addAttribute("storePage", storePage);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("user", user);
 
         return "admin/store/index";
     }
@@ -73,9 +80,12 @@ public class AdminStoreController {
     // 管理者店舗登録
     @PostMapping("/create")
     public String create(@ModelAttribute @Validated StoreRegisterForm storeRegisterForm, BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, Model model) {
+        List<CategoryEntity> categoryList = new ArrayList<CategoryEntity>();
+        categoryList = categoryRepository.findAll();
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("categoryList", categoryList);
             return "admin/store/register";
         }
 
@@ -92,7 +102,8 @@ public class AdminStoreController {
         String imageName = store.getImageName();
         StoreEditForm storeEditForm = new StoreEditForm(store.getStoreId(), store.getStoreName(), null,
                 store.getPostCode(), store.getAddress(), store.getPhoneNumber(), store.getParkingStorage(),
-                store.getStoreDescribe(), store.getCategoryId(), store.getStartTime(), store.getCloseTime(), store.getRest());
+                store.getStoreDescribe(), store.getCategoryId(), store.getStartTime(), store.getCloseTime(),
+                store.getRest());
 
         model.addAttribute("imageName", imageName);
         model.addAttribute("storeEditForm", storeEditForm);

@@ -41,6 +41,12 @@ public class AuthController {
         return "auth/signup";
     }
 
+    // パスワード変更
+    @GetMapping("/password/reset")
+    public String password(){
+        return "auth/password";
+    }
+
     // 新規会員登録
     @PostMapping("/signup")
     public String signup(@ModelAttribute @Validated SignupForm signupForm, BindingResult bindingResult,

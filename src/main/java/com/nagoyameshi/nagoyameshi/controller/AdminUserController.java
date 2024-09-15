@@ -25,7 +25,7 @@ public class AdminUserController {
 
     // 管理者ユーザ情報一覧表示
     @GetMapping
-    public String index(@RequestParam(name = "keyword", required = false) String keyword,
+    public String index(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
             @PageableDefault(page = 0, size = 10, sort = "userId", direction = Direction.ASC) Pageable pageable,
             Model model) {
 
@@ -37,18 +37,18 @@ public class AdminUserController {
             userPage = userRepository.findByEmail(keyword, pageable);
         }
 
-        model.addAttribute(userPage);
-        model.addAttribute(keyword);
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("keyword",keyword);
 
         return "admin/user/index";
     }
 
     // 管理者ユーザ情報詳細表示
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public String show(@PathVariable(name = "userId")Integer userId, Model model) {
         UserEntity user = userRepository.getReferenceById(userId);
 
-        model.addAttribute(user);
+        model.addAttribute("user", user);
 
         return "admin/user/show";
     }

@@ -62,17 +62,20 @@ public class StoreController {
         if (userDetailsImpl != null) {
             UserEntity user = userDetailsImpl.getUser();
             Optional<FavoriteEntity> favorite = favoriteRepository.findByStoreIdAndUserId(store, user);
+
             model.addAttribute("favorite", favorite);
+            model.addAttribute("user", user);
             model.addAttribute("userId", userDetailsImpl.getUser().getUserId());
 
             boolean hasUserReviewed = review.stream()
-                    .anyMatch(reviews -> ((UserDetailsImpl) review).getUser().getUserId()
-                            .equals(userDetailsImpl.getUser().getUserId()));
-            //boolean hasFavorite = favorite.stream()
-              //      .anyMatch(favorites -> favorite.getUserEntity().getUserId().equals(userDetailsImpl.getUser().getUserId()));
+                    .anyMatch(reviews -> reviews.getUserId().getUserId()
+                            .equals(user.getUserId()));
+            boolean hasFavorite = favorite.stream()
+                    .anyMatch(favorites -> favorites.getUserId().getUserId()
+                            .equals(user.getUserId()));
 
             model.addAttribute("hasUserReviewed", hasUserReviewed);
-            //model.addAttribute("hasFavorite", hasFavorite);
+            model.addAttribute("hasFavorite", hasFavorite);
         }
 
         return "store/show";
@@ -81,9 +84,11 @@ public class StoreController {
     // お気に入り追加
     @PostMapping("/{storeId}/addFavorite")
     public String addFavorite(@PathVariable(name = "storeId") Integer storeId,
-            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
         Integer userId = userDetailsImpl.getUser().getUserId();
+        UserEntity user = userDetailsImpl.getUser();
 
+        model.addAttribute("user", user);
         favoriteService.add(userId, storeId);
 
         return "redirect:/store/{storeId}";
@@ -92,7 +97,7 @@ public class StoreController {
     // お気に入り削除
     @PostMapping("/{storeId}/deleteFavorite")
     public String deleteFavorite(@PathVariable(name = "storeId") Integer storeId,
-            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
         UserEntity user = userDetailsImpl.getUser();
         StoreEntity store = storeRepository.getReferenceById(storeId);
 
@@ -104,6 +109,7 @@ public class StoreController {
     @GetMapping("/{storeId}/reservation/input")
     public String input(@PathVariable(name = "storeId") Integer storeId,
             @ModelAttribute @Validated ReservationInputForm reservationInputForm,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {

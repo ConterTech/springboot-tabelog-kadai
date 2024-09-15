@@ -50,7 +50,7 @@
                         <li class="nav-item" sec:authorize="isAnonymous()">
                             <a class="nav-link" th:href="@{/signup}">会員登録</a>
                         </li>
-                        <!-- 無料会員 -->
+                        <!-- ログイン -->
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_GENERAL')">
                             <a id="navbarDropdownGeneral" class="nav-link dropdown-toggle" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -59,6 +59,8 @@
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownGeneral">
                                 <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/user}">会員情報</a>
+                                <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/reservation}">予約一覧</a>
+                                <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/favorite}">お気に入り一覧</a>
                                 <div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/logout}"
@@ -68,8 +70,26 @@
                                 <form class="d-none" id="logout-form" th:action="@{/logout}" method="post"></form>
                             </div>
                         </li>
-                        <!-- 有料会員 -->
                         <!-- 管理者 -->
+                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a id="navbarDropdownGeneral" class="nav-link dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <span sec:authentication="principal.user.name"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownGeneral">
+                                <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/user}">会員一覧</a>
+                                <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/favorite}">店舗一覧</a>
+                                <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/category}">カテゴリ一覧</a>
+                                <div class="dropdown-divider"></div>
+
+                                <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/logout}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    ログアウト
+                                </a>
+                                <form class="d-none" id="logout-form" th:action="@{/logout}" method="post"></form>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

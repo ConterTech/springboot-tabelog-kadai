@@ -20,6 +20,18 @@
                     <div class="col-xl-3 col-lg-4 col-md-5 col-sm-7">
                         <h1 class="mb-4 text-center">ログイン</h1>
 
+                        <div class="text-danger text-center mb-4">
+                            <p>動作確認用アカウント</p>
+                            <p>メールアドレス</p>
+                            <p>taro.samurai@example.com</p>
+                            <p>パスワード</p>
+                            <p>password</p>
+                            <p>テストクレジット</p>
+                            <p>4242424242424242</p>
+                            <p>テストクレジット詳細</p>
+                            <a href="https://docs.stripe.com/testing?locale=ja-JP#use-test-cards">こちら</a>
+                        </div>
+
                         <div th:if="${param.error}" class="alert alert-danger">
                             メールアドレスまたはパスワードが正しくありません。
                         </div>
@@ -39,6 +51,12 @@
                                     class="btn text-white shadow-sm w-100 nagoyameshi-btn">ログイン</button>
                             </div>
                         </form>
+
+                        <div class="text-center mb-3">
+                            <a th:href="@{/password/reset}">
+                                パスワードをお忘れの方はこちら
+                            </a>
+                        </div>
 
                         <div class="text-center">
                             <a th:href="@{/signup}">

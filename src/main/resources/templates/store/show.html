@@ -27,20 +27,23 @@
                                 <li class="breadcrumb-item active" aria-current="page">店舗詳細</li>
                             </ol>
                         </nav>
-                        <!-- ログイン済みの時お気に入り表示 -->
+                        <!-- 有料会員のみお気に入り表示 -->
                         <div sec:authorize="isAuthenticated()">
-                            <div class="favorite">
-                                <div th:if="${hasFavorite}">
-                                    <form th:action="@{/store/__${store.getStoreId()}__/deleteFavorite}" method="post">
-                                        <button type="submit"
-                                            class="btn btn-link text-decolation-none right">&#9829;お気に入り削除</button>
-                                    </form>
-                                </div>
-                                <div th:unless="${hasFavorites}">
-                                    <form th:action="@{/store/__${store.getStoreId()}__/addFavorite}" method="post">
-                                        <button type="submit"
-                                            class="btn btn-link text-decolation-none right">&#9825;お気に入り追加</button>
-                                    </form>
+                            <div th:if="${user.PaidFlag}">
+                                <div class="favorite">
+                                    <div th:if="${hasFavorite}">
+                                        <form th:action="@{/store/__${store.getStoreId()}__/deleteFavorite}"
+                                            method="post">
+                                            <button type="submit"
+                                                class="btn btn-link text-decolation-none right">&#9829;お気に入り削除</button>
+                                        </form>
+                                    </div>
+                                    <div th:unless="${hasFavorite}">
+                                        <form th:action="@{/store/__${store.getStoreId()}__/addFavorite}" method="post">
+                                            <button type="submit"
+                                                class="btn btn-link text-decolation-none right">&#9825;お気に入り追加</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +142,7 @@
                                 <div sec:authorize="isAnonymous()" class="col-lg-4 px-0 ps-lg-4 mb-4">
                                     <div class="card">
                                         <div class="card-body">
-                                            <p class="card-text">予約するには<a th:href="@{/login}">ログイン</a>が必要です。</p>
+                                            <p class="card-text">予約するには<a th:href="@{/login}">ログイン</a>かつ有料会員登録が必要です。</p>
                                             <button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn"
                                                 disabled>予約する</button>
                                         </div>
@@ -156,7 +159,8 @@
                                                     <label for="checkinTime"
                                                         class="col-form-label text-md-left fw-bold">ご来店時間</label>
                                                     <div th:if="${#fields.hasErrors('checkinTime')}"
-                                                        class="text-danger small mb-2" th:errors="*{checkinTime}"></div>
+                                                        class="text-danger small mb-2" th:errors="*{checkinTime}">
+                                                    </div>
                                                     <input type="text" class="form-control" th:field="*{checkinTime}">
                                                 </div>
                                                 <div class="form-group mb-2">
@@ -177,8 +181,15 @@
                                                     <textarea class="form-control" th:field="*{remarks}"></textarea>
                                                 </div>
                                                 <div class="form-group">
-                                                    <button type="submit"
-                                                        class="btn text-white shadow-sm w-100 nagoyameshi-btn">予約する</button>
+                                                    <div th:if="${user.PaidFlag}">
+                                                        <button type="submit"
+                                                            class="btn text-white shadow-sm w-100 nagoyameshi-btn">予約する</button>
+                                                    </div>
+                                                    <div th:unless="${user.PaidFlag}">
+                                                        <button type="submit"
+                                                            class="btn text-white shadow-sm w-100 nagoyameshi-btn"
+                                                            disabled>予約する</button>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>

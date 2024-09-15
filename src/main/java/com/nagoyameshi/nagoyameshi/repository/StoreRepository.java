@@ -15,5 +15,5 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Integer>{
     public Page<StoreEntity> findByCategoryId(CategoryEntity categoryId, Pageable pageable);
     public Optional<StoreEntity> findByStoreId(Integer storeId);
 
-    public Page<StoreEntity> findByStoreIdIn(List<StoreEntity> storeList, Pageable pageable);
+    public Page<StoreEntity> findByStoreIdIn(List<Integer> storeList, Pageable pageable);
 }

@@ -36,7 +36,8 @@
                                     <input type="text" class="form-control" name="store" th:value="${store}"
                                         placeholder="店舗名">
                                 </div>
-                                <button type="submit" class="btn text-white shadow-sm nagoyameshi-btn w-100 mb-3">検索</button>
+                                <button type="submit"
+                                    class="btn text-white shadow-sm nagoyameshi-btn w-100 mb-3">検索</button>
                             </form>
                         </div>
                         <!-- カテゴリ絞込 -->
@@ -99,30 +100,33 @@
                 </div>
 
                 <!-- ページネーション -->
-                <div th:if="${storePage.getTotalPages() > 1}" class="d-flex justify-content-center">
-                    <nav aria-label="店舗一覧ページ">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <span th:if="${storePage.isFirst()}" class="page-link disabled">前</span>
-                                <a th:unless="${storePage.isFirst()}"
-                                    th:href="@{/(page = ${storePage.getNumber() - 1}, store = ${store}, categoryId = ${categoryId})}"
-                                    class="page-link nagoyameshi-page-link">前</a>
-                            </li>
-                            <li th:each="i : ${#numbers.sequence(0, storePage.getTotalPages() - 1)}" class="page-item">
-                                <span th:if="${i == storePage.getNumber()}" class="page-link active nagoyameshi-active"
-                                    th:text="${i + 1}"></span>
-                                <a th:unless="${i == storePage.getNumber()}"
-                                    th:href="@{/(page = ${i}, store = ${store}, categoryId = ${categoryId})}"
-                                    class="page-link nagoyameshi-page-link" th:text="${i + 1}"></a>
-                            </li>
-                            <li class="page-item">
-                                <span th:if="${storePage.isLast()}" class="page-link disabled">次</span>
-                                <a th:unless="${storePage.isLast()}"
-                                    th:href="@{/(page=${storePage.getNumber() + 1}, store = ${store}, categoryId = ${categoryId})}"
-                                    class="page-link nagoyameshi-page-link">次</a>
-                            </li>
-                        </ul>
-                    </nav>
+                <div th:if="${storePage != null}" th:with="totalPages=${storePage.getTotalPages()}">
+                    <div th:if="${totalPages > 1}" class="d-flex justify-content-center">
+                        <nav aria-label="店舗一覧ページ">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <span th:if="${storePage.isFirst()}" class="page-link disabled">前</span>
+                                    <a th:unless="${storePage.isFirst()}"
+                                        th:href="@{/(page = ${storePage.getNumber() - 1}, store = ${store}, categoryId = ${categoryId})}"
+                                        class="page-link nagoyameshi-page-link">前</a>
+                                </li>
+                                <li th:each="i : ${#numbers.sequence(0, storePage.getTotalPages() - 1)}"
+                                    class="page-item">
+                                    <span th:if="${i == storePage.getNumber()}"
+                                        class="page-link active nagoyameshi-active" th:text="${i + 1}"></span>
+                                    <a th:unless="${i == storePage.getNumber()}"
+                                        th:href="@{/(page = ${i}, store = ${store}, categoryId = ${categoryId})}"
+                                        class="page-link nagoyameshi-page-link" th:text="${i + 1}"></a>
+                                </li>
+                                <li class="page-item">
+                                    <span th:if="${storePage.isLast()}" class="page-link disabled">次</span>
+                                    <a th:unless="${storePage.isLast()}"
+                                        th:href="@{/(page=${storePage.getNumber() + 1}, store = ${store}, categoryId = ${categoryId})}"
+                                        class="page-link nagoyameshi-page-link">次</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </main>

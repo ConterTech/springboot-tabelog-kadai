@@ -38,17 +38,17 @@ public class FavoriteController {
         UserEntity user = userDetailsImpl.getUser();
 
         List<FavoriteEntity> favorites = favoriteRepository.findByUserId(user);
-        List<StoreEntity> storeIdList = new ArrayList<>();
+        List<Integer> storeIdList = new ArrayList<>();
 
         for (FavoriteEntity favorite : favorites) {
-            StoreEntity storeId = favorite.getStoreId();
+            Integer storeId = favorite.getStoreId().getStoreId();
             storeIdList.add(storeId);
         }
 
         Page<StoreEntity> storePage = storeRepository.findByStoreIdIn(storeIdList, pageable);
 
-        model.addAttribute(storePage);
+        model.addAttribute("storePage", storePage);
 
-        return "index";
+        return "favorite/index";
     }
 }
