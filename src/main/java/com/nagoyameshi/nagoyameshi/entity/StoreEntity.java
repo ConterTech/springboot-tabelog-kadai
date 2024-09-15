@@ -1,5 +1,7 @@
 package com.nagoyameshi.nagoyameshi.entity;
 
+import java.time.LocalTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,6 +45,15 @@ public class StoreEntity {
     @OneToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryId;
+
+    @Column(name = "start_time")
+    private LocalTime startTime;
+    
+    @Column(name = "close_time")
+    private LocalTime closeTime;
+    
+    @Column(name = "rest")
+    private String rest;
 
     @Column(name = "delete_flag")
     private boolean deleteFlag;

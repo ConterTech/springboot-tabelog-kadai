@@ -43,6 +43,9 @@ public class StoreService {
         store.setParkingStorage(storeRegisterForm.getParkingStorage());
         store.setStoreDescribe(storeRegisterForm.getStoreDescribe());
         store.setCategoryId(storeRegisterForm.getCategoryId());
+        store.setStartTime(storeRegisterForm.getStartTime());
+        store.setCloseTime(storeRegisterForm.getCloseTime());
+        store.setRest(storeRegisterForm.getRest());
 
         storeRepository.save(store);
     }
@@ -68,6 +71,9 @@ public class StoreService {
         store.setParkingStorage(storeEditForm.getParkingStorage());
         store.setStoreDescribe(storeEditForm.getStoreDescribe());
         store.setCategoryId(storeEditForm.getCategoryId());
+        store.setStartTime(storeEditForm.getStartTime());
+        store.setCloseTime(storeEditForm.getCloseTime());
+        store.setRest(storeEditForm.getRest());
 
         storeRepository.save(store);
     }

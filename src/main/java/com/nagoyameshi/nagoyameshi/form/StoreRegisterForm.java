@@ -1,5 +1,7 @@
 package com.nagoyameshi.nagoyameshi.form;
 
+import java.time.LocalTime;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nagoyameshi.nagoyameshi.entity.CategoryEntity;
@@ -32,4 +34,13 @@ public class StoreRegisterForm {
 
     @NotNull(message = "カテゴリを選択してください。")
     private CategoryEntity categoryId;
+
+    @NotNull(message = "営業開始時間を入力してください。")
+    private  LocalTime startTime;
+
+    @NotNull(message = "営業終了時間を入力してください。")
+    private LocalTime closeTime;
+
+    @NotEmpty(message = "定休日を入力してください。")
+    private String rest;
 }

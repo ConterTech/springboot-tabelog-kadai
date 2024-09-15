@@ -86,7 +86,7 @@ CREATE TABLE reservation (
     user_id INT NOT NULL COMMENT 'ユーザid',
     checkin_time TIME NOT NULL COMMENT '開始時間',
     number_of_people INT NOT NULL COMMENT '予約人数',
-    remarks TEXT NOT NULL COMMENT '備考欄',
+    remarks TEXT COMMENT '備考欄',
     delete_flag boolean DEFAULT 0 COMMENT '削除フラグ',
     CONSTRAINT reservation_PKC PRIMARY KEY (store_id, user_id)
 ) COMMENT '予約情報';
@@ -106,9 +106,7 @@ CREATE TABLE user (
     address VARCHAR(100) NOT NULL COMMENT '住所',
     email VARCHAR(50) NOT NULL COMMENT 'メールアドレス',
     age INT NOT NULL COMMENT '年齢',
-    gender VARCHAR(20) NOT NULL COMMENT '性別:1：男性
-2：女性
-3：その他',
+    gender VARCHAR(20) NOT NULL COMMENT '性別',
     password VARCHAR(100) NOT NULL COMMENT 'パスワード',
     role_id INT NOT NULL COMMENT '属性',
     enabled boolean NOT NULL COMMENT '有効可否',
@@ -149,7 +147,7 @@ DROP TABLE if exists store CASCADE;
 
 
 CREATE TABLE store (
-    store_id INT NOT NULL COMMENT '店舗id',
+    store_id INT NOT NULL AUTO_INCREMENT COMMENT '店舗id',
     store_name VARCHAR(30) NOT NULL COMMENT '店舗名',
     image_name VARCHAR(300) NOT NULL COMMENT '店舗写真',
     post_code VARCHAR(10) NOT NULL COMMENT '郵便番号',
@@ -157,6 +155,9 @@ CREATE TABLE store (
     phone_number VARCHAR(15) NOT NULL COMMENT '電話番号',
     parking_storage INT NOT NULL COMMENT '駐車場台数',
     store_describe TEXT NOT NULL COMMENT '店舗説明',
+    start_time TIME NOT NULL COMMENT '営業開始時間',
+    close_time TIME NOT NULL COMMENT '営業終了時間',
+    rest VARCHAR(20) NOT NULL COMMENT '定休日', 
     category_id INT NOT NULL COMMENT 'カテゴリid',
     delete_flag boolean DEFAULT 0 COMMENT '削除フラグ',
     CONSTRAINT store_PKC PRIMARY KEY (store_id)
