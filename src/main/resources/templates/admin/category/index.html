@@ -29,6 +29,8 @@
                                     <button type="submit" class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
                                 </div>
                             </form>
+                            <a th:href="@{/admin/category/register}"
+                                class="btn text-white shadow-sm mb-3 nagoyameshi-btn">登録</a>
                         </div>
 
                         <div th:if="${successMessage}" class="alert alert-info">
@@ -52,7 +54,7 @@
                                             th:data-bs-target="${'#deleteCategoryModal' + category.getCategoryId()}">削除</a>
                                     </td>
 
-                                    <!-- 削除用モーダル -->
+                                    <!-- 削除用モーダル  -->
                                     <div class="modal fade" th:id="${'deleteCategoryModal' + category.getCategoryId()}"
                                         tabindex="-1"
                                         th:aria-labelledby="${'deleteCategoryModalLabel' + category.getCategoryId()}">
@@ -75,6 +77,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                 </tr>
                             </tbody>
                         </table>

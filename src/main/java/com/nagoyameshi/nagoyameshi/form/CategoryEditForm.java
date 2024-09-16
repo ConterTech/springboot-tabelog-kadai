@@ -1,10 +1,12 @@
 package com.nagoyameshi.nagoyameshi.form;
 
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class CategorySearchForm {
+@AllArgsConstructor
+public class CategoryEditForm {
     @NotEmpty(message = "カテゴリ名を入力してください。")
     private String category;
 }
