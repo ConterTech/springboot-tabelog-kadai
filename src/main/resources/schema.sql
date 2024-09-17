@@ -52,7 +52,7 @@ DROP TABLE if exists category CASCADE;
 
 
 CREATE TABLE category (
-    category_id INT NOT NULL COMMENT 'カテゴリid',
+    category_id INT NOT NULL AUTO_INCREMENT COMMENT 'カテゴリid',
     category VARCHAR(30) NOT NULL COMMENT 'カテゴリ名',
     delete_flag boolean DEFAULT 0 COMMENT '削除フラグ',
     CONSTRAINT category_PKC PRIMARY KEY (category_id)
