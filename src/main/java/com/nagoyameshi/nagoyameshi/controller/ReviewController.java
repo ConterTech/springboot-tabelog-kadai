@@ -99,6 +99,7 @@ public class ReviewController {
     @GetMapping("{storeId}/edit")
     public String edit(@PathVariable(name = "storeId") Integer storeId,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+
         StoreEntity store = storeRepository.getReferenceById(storeId);
         UserEntity user = userDetailsImpl.getUser();
         ReviewEntity review = reviewRepository.findByStoreIdAndUserId(store, user);
@@ -114,7 +115,8 @@ public class ReviewController {
     @PostMapping("{storeId}/update")
     public String update(@PathVariable(name = "storeId") Integer storeId,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
-            @ModelAttribute @Validated ReviewEditForm reviewEditForm, BindingResult bindingResult, Model model) {
+            @ModelAttribute @Validated ReviewEditForm reviewEditForm, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes, Model model) {
 
         if (bindingResult.hasErrors()) {
             StoreEntity store = storeRepository.getReferenceById(storeId);
@@ -128,20 +130,24 @@ public class ReviewController {
         Integer userId = userDetailsImpl.getUser().getUserId();
 
         reviweService.update(reviewEditForm, userId, storeId);
+        redirectAttributes.addFlashAttribute("successMessage", "レビューを投稿しました。");
 
         return "redirect:/store/{storeId}";
     }
 
     // レビュー削除
     @PostMapping("{storeId}/delete")
-    public String delete(@PathVariable(name = "storeId") Integer storeId, UserDetailsImpl userDetailsImpl,
-            Model model) {
+    public String delete(@PathVariable(name = "storeId") Integer storeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+            RedirectAttributes redirectAttributes, Model model) {
+
         StoreEntity store = storeRepository.getReferenceById(storeId);
         UserEntity user = userDetailsImpl.getUser();
-        ReviewEntity review = reviewRepository.findByStoreIdAndUserId(store, user);
-        review.setDeleteFlag(true);
-        reviewRepository.save(review);
 
-        return "index";
+        reviewRepository.deleteByStoreIdAndUserId(store, user);
+
+        redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
+
+        return "redirect:/store/{storeId}";
     }
 }

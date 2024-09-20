@@ -115,6 +115,7 @@ public class AdminStoreController {
     @PostMapping("/{storeId}/update")
     public String update(@ModelAttribute @Validated StoreEditForm storeEditForm, BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
+                
         if (bindingResult.hasErrors()) {
             return "admin/store/edit";
         }

@@ -56,7 +56,7 @@
                                     <td th:text="${store.getPostCode()}"></td>
                                     <td th:text="${store.getAddress()}"></td>
                                     <td th:text="${store.getPhoneNumber()}"></td>
-                                    <td><a th:href="@{/admin/store/__${store.getStoreId()}__}">編集</a></td>
+                                    <td><a th:href="@{/admin/store/__${store.getStoreId()}__/edit}">編集</a></td>
                                     <td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal"
                                             th:data-bs-target="${'#deleteStoreModal' + store.getStoreId()}">削除</a></td>
 

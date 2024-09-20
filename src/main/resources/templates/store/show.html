@@ -226,7 +226,7 @@
                                                     <div th:if="${user.PaidFlag}">
                                                         <div th:if="${review.getUserId().getUserId() == userId}">
                                                             <a class="review-edit"
-                                                                th:href="@{/store/__${store.getStoreId()}__/editReview}">編集</a>
+                                                                th:href="@{/store/__${store.getStoreId()}__/edit}">編集</a>
                                                             <a class="review-delete" href="#" data-bs-toggle="modal"
                                                                 th:data-bs-target="${'#deleteReviewModal' + store.getStoreId()}">削除</a>
                                                             <!-- 削除用モーダル -->
@@ -247,7 +247,7 @@
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                             <form method="post"
-                                                                                th:action="@{/store/__${store.getStoreId()}__/deleteReview}">
+                                                                                th:action="@{/store/__${store.getStoreId()}__/delete}">
                                                                                 <button type="submit"
                                                                                     class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
                                                                             </form>
