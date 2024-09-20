@@ -39,3 +39,6 @@ INSERT IGNORE INTO category (category_id, category, delete_flag) VALUES (5, 'ス
 INSERT IGNORE INTO category (category_id, category, delete_flag) VALUES (6, 'フルーツ', 0);
 INSERT IGNORE INTO category (category_id, category, delete_flag) VALUES (7, 'メキシコ料理', 0);
 INSERT IGNORE INTO category (category_id, category, delete_flag) VALUES (8, 'ジャンクフード', 0);
+
+-- roleテーブル
+-- INSERT IGNORE INTO reservation (reservation_id, store_id, user_id, checkin_time, number_of_people, remarks, delete_flag) VALUES (1, 1, 3, 2024-10-24 8:30, 4, 'test', 0);

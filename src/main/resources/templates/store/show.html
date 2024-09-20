@@ -156,12 +156,12 @@
                                                 th:action="@{/store/__${store.getStoreId()}__/reservation/input}"
                                                 th:object="${reservationInputForm}">
                                                 <div class="form-group mb-2">
-                                                    <label for="checkinTime"
-                                                        class="col-form-label text-md-left fw-bold">ご来店時間</label>
-                                                    <div th:if="${#fields.hasErrors('checkinTime')}"
-                                                        class="text-danger small mb-2" th:errors="*{checkinTime}">
+                                                    <label for="checkinTimeTemp"
+                                                        class="col-form-label text-md-left fw-bold">ご来店日時</label>
+                                                    <div th:if="${#fields.hasErrors('checkinTimeTemp')}"
+                                                        class="text-danger small mb-2" th:errors="*{checkinTimeTemp}">
                                                     </div>
-                                                    <input type="text" class="form-control" th:field="*{checkinTime}">
+                                                    <input type="text" class="form-control" th:field="*{checkinTimeTemp}">
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <label for="numberOfPeople"

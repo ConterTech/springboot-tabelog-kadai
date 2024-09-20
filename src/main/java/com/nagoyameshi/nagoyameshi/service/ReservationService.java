@@ -23,21 +23,14 @@ public class ReservationService {
     @Transactional
     public void create(ReservationRegisterForm reservationRegisterForm){
         ReservationEntity reservation = new ReservationEntity();
-        
-        LocalDateTime checkinTime = LocalDateTime.parse(reservationRegisterForm.getCheckinTime());
 
         reservation.setStoreId(storeRepository.getReferenceById(reservationRegisterForm.getStoreId()));
         reservation.setUserId(userRepository.getReferenceById(reservationRegisterForm.getUserId()));
-        reservation.setCheckinTime(checkinTime);
+        reservation.setCheckinTime(reservationRegisterForm.getCheckinTime());
         reservation.setNumberOfPeople(reservationRegisterForm.getNumberOfPeople());
         reservation.setRemarks(reservationRegisterForm.getRemarks());
         reservation.setDeleteFlag(false);
 
         reservationRepository.save(reservation);
-    }
-
-    // 予約人数が定員以下かどうかチェックする
-    public boolean isWithnCapacity(Integer numberOfPeople, Integer capacity){
-        return numberOfPeople <= capacity;
     }
 }

@@ -82,13 +82,14 @@ DROP TABLE if exists reservation CASCADE;
 
 
 CREATE TABLE reservation (
+    reservation_id INT NOT NULL AUTO_INCREMENT COMMENT '予約id',
     store_id INT NOT NULL COMMENT '店舗id',
     user_id INT NOT NULL COMMENT 'ユーザid',
-    checkin_time TIME NOT NULL COMMENT '開始時間',
+    checkin_time DATETIME NOT NULL COMMENT '開始時間',
     number_of_people INT NOT NULL COMMENT '予約人数',
     remarks TEXT COMMENT '備考欄',
     delete_flag boolean DEFAULT 0 COMMENT '削除フラグ',
-    CONSTRAINT reservation_PKC PRIMARY KEY (store_id, user_id)
+    CONSTRAINT reservation_PKC PRIMARY KEY (reservation_id)
 ) COMMENT '予約情報';
 
 

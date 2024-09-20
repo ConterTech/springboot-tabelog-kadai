@@ -126,11 +126,11 @@ public class AdminStoreController {
     }
 
     // 管理者店舗削除
-    @GetMapping("/{storeId}/delete")
-    public String delete(Model model, @PathVariable(name = "storeId") Integer storeId) {
-        StoreEntity store = storeRepository.getReferenceById(storeId);
-        store.setDeleteFlag(true);
-        storeRepository.save(store);
+    @PostMapping("/{storeId}/delete")
+    public String delete(@PathVariable(name = "storeId") Integer storeId, RedirectAttributes redirectAttributes) {
+        storeRepository.deleteById(storeId);
+        
+        redirectAttributes.addFlashAttribute("successMessage", "店舗を削除しました。");
 
         return "redirect:/admin/store";
     }
