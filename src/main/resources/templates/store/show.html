@@ -53,6 +53,11 @@
                         <div th:if="${errorMessage}" class="alert alert-danger">
                             <span th:text="${errorMessage}"></span>
                         </div>
+
+                        <div th:if="${successMessage}" class="alert alert-info">
+                            <span th:text="${successMessage}"></span>
+                        </div>
+
                         <!-- 店舗画像 -->
                         <div class="mb-4">
                             <img th:if="${store.getImageName()}" th:src="@{/storage/__${store.getImageName()}__}"
@@ -205,7 +210,7 @@
                                         <div th:if="${user.PaidFlag}">
                                             <div class="text-center mb-3">
                                                 <div th:if="${!hasUserReviewed}">
-                                                    <a th:href="@{/store/__${store.getStoreId()}__/reviewRegister}"
+                                                    <a th:href="@{/store/__${store.getStoreId()}__/register}"
                                                         class="btn text-white shadow-sm nagoyameshi-btn">レビューを投稿する</a>
                                                 </div>
                                             </div>

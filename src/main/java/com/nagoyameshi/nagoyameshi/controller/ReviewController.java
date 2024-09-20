@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nagoyameshi.nagoyameshi.entity.ReviewEntity;
 import com.nagoyameshi.nagoyameshi.entity.StoreEntity;
@@ -44,11 +45,11 @@ public class ReviewController {
             @PageableDefault(page = 0, size = 10, sort = "storeId", direction = Direction.ASC) Pageable pageable,
             Model model) {
 
-        StoreEntity store = storeRepository.getReferenceById(storeId);      
+        StoreEntity store = storeRepository.getReferenceById(storeId);
         Page<ReviewEntity> reviewPage = reviewRepository.findByStoreId(store, pageable);
 
-        model.addAttribute("store",store);
-        model.addAttribute("reviewPage",reviewPage);
+        model.addAttribute("store", store);
+        model.addAttribute("reviewPage", reviewPage);
 
         if (userDetailsImpl != null) {
             model.addAttribute("userId", userDetailsImpl.getUser().getUserId());
@@ -62,7 +63,7 @@ public class ReviewController {
     public String register(@PathVariable(name = "storeId") Integer storeId, Model model) {
         StoreEntity store = storeRepository.getReferenceById(storeId);
 
-        model.addAttribute(store);
+        model.addAttribute("store", store);
         model.addAttribute("reviewRegisterForm", new ReviewRegisterForm());
 
         return "review/post";
@@ -73,21 +74,23 @@ public class ReviewController {
     public String create(@PathVariable(name = "storeId") Integer storeId,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
             @ModelAttribute @Validated ReviewRegisterForm reviewRegisterForm, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
             Model model) {
 
         if (bindingResult.hasErrors()) {
             StoreEntity store = storeRepository.getReferenceById(storeId);
 
-            model.addAttribute(store);
-            model.addAttribute(reviewRegisterForm);
+            model.addAttribute("store", store);
+            model.addAttribute("reviewRegisterForm", reviewRegisterForm);
 
-            return "index/post";
+            return "review/post";
         }
 
         UserEntity user = userDetailsImpl.getUser();
         Integer userId = user.getUserId();
 
         reviweService.create(reviewRegisterForm, userId, storeId);
+        redirectAttributes.addFlashAttribute("successMessage", "レビューを投稿しました。");
 
         return "redirect:/store/{storeId}";
     }
@@ -101,8 +104,8 @@ public class ReviewController {
         ReviewEntity review = reviewRepository.findByStoreIdAndUserId(store, user);
         ReviewEditForm reviewEditForm = new ReviewEditForm(review.getReviewStar(), review.getReviewText());
 
-        model.addAttribute(store);
-        model.addAttribute(reviewEditForm);
+        model.addAttribute("store", store);
+        model.addAttribute("reviewEditForm", reviewEditForm);
 
         return "review/edit";
     }
@@ -116,8 +119,8 @@ public class ReviewController {
         if (bindingResult.hasErrors()) {
             StoreEntity store = storeRepository.getReferenceById(storeId);
 
-            model.addAttribute(store);
-            model.addAttribute(reviewEditForm);
+            model.addAttribute("store", store);
+            model.addAttribute("reviewEditForm", reviewEditForm);
 
             return "review/edit";
         }
@@ -131,13 +134,14 @@ public class ReviewController {
 
     // レビュー削除
     @PostMapping("{storeId}/delete")
-    public String delete(@PathVariable(name = "storeId") Integer storeId, UserDetailsImpl userDetailsImpl, Model model) {
+    public String delete(@PathVariable(name = "storeId") Integer storeId, UserDetailsImpl userDetailsImpl,
+            Model model) {
         StoreEntity store = storeRepository.getReferenceById(storeId);
         UserEntity user = userDetailsImpl.getUser();
         ReviewEntity review = reviewRepository.findByStoreIdAndUserId(store, user);
         review.setDeleteFlag(true);
         reviewRepository.save(review);
-        
+
         return "index";
     }
 }
