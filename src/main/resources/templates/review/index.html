@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <div th:replace="~{fragment :: meta}"></div>
+
+    <div th:replace="~{fragment :: styles}"></div>
+
+    <title>レビュー一覧</title>
+</head>
+
+<body>
+    <div class="nagoyameshi-wrapper">
+        <!-- ヘッダー -->
+        <div th:replace="~{fragment :: header}"></div>
+
+        <main>
+            <div class="container nagoyameshi-container pb-5">
+                <div class="row justify-content-center">
+                    <div class="col-xxl-9 col-xl-10 col-lg-11">
+                        <nav class="my-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+                                <li class="breadcrumb-item"><a th:href="@{/store/__${store.getStoreId()}__}">店舗詳細</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">レビュー一覧</li>
+                            </ol>
+                        </nav>
+
+                        <h1 class="mb-3 text-center">レビュー一覧</h1>
+
+                        <div>
+							<h3 class="mb-4 text-center">レビュー</h3>
+							<div id="review-wrapper">
+								<div class="review" th:each="review : ${reviewPage}">
+									<div class="reviewTitle">
+										<div class="reviewer" th:text="${review.getUserId().getName()}"></div>
+										<div th:if="${review.getUserId().getUserId() == userId}">
+											<a class="review-edit"
+												th:href="@{/store/__${store.getStoreId()}__/editReview}">編集</a>
+											<a class="review-delete"
+												th:href="@{/store/__${store.getStoreId()}__/editReview}">削除</a>
+										</div>
+									</div>
+
+									<th:block th:switch="${review.reviewStar}">
+										<div class="star-color" th:case=1>&#9733;&#9734;&#9734;&#9734;&#9734;</div>
+										<div class="star-color" th:case=2>&#9733;&#9733;&#9734;&#9734;&#9734;</div>
+										<div class="star-color" th:case=3>&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+										<div class="star-color" th:case=4>&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+										<div class="star-color" th:case=*>&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+									</th:block>
+									<div th:text="${review.getReviewText()}"></div>
+								</div>
+							</div>
+						</div>
+
+                        <!-- ページネーション -->
+                        <div th:if="${reviewPage != null}" th:with="totalPages=${reviewPage.getTotalPages()}">
+                            <div th:if="${totalPages > 1}" class="d-flex justify-content-center">
+                                <nav aria-label="お気に入り一覧ページ">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <span th:if="${reviewPage.isFirst()}" class="page-link disabled">前</span>
+                                            <a th:unless="${reviewPage.isFirst()}"
+                                                th:href="@{/favorite(page = ${reviewPage.getNumber() - 1})}"
+                                                class="page-link nagoyameshi-page-link">前</a>
+                                        </li>
+                                        <li th:each="i : ${#numbers.sequence(0, reviewPage.getTotalPages() - 1)}"
+                                            class="page-item">
+                                            <span th:if="${i == reviewPage.getNumber()}"
+                                                class="page-link active nagoyameshi-active" th:text="${i + 1}"></span>
+                                            <a th:unless="${i == reviewPage.getNumber()}"
+                                                th:href="@{/favorite(page = ${i})}"
+                                                class="page-link nagoyameshi-page-link" th:text="${i + 1}"></a>
+                                        </li>
+                                        <li class="page-item">
+                                            <span th:if="${reviewPage.isLast()}" class="page-link disabled">次</span>
+                                            <a th:unless="${reviewPage.isLast()}"
+                                                th:href="@{/favorite(page = ${reviewPage.getNumber() + 1})}"
+                                                class="page-link nagoyameshi-page-link">次</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <div th:replace="~{fragment :: footer}"></div>
+    </div>
+
+    <div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

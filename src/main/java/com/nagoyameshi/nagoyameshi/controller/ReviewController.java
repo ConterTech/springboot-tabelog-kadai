@@ -45,10 +45,10 @@ public class ReviewController {
             Model model) {
 
         StoreEntity store = storeRepository.getReferenceById(storeId);      
-        Page<ReviewEntity> review = reviewRepository.findByStoreId(store, pageable);
+        Page<ReviewEntity> reviewPage = reviewRepository.findByStoreId(store, pageable);
 
-        model.addAttribute(store);
-        model.addAttribute(review);
+        model.addAttribute("store",store);
+        model.addAttribute("reviewPage",reviewPage);
 
         if (userDetailsImpl != null) {
             model.addAttribute("userId", userDetailsImpl.getUser().getUserId());

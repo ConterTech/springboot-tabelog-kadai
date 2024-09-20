@@ -161,7 +161,8 @@
                                                     <div th:if="${#fields.hasErrors('checkinTimeTemp')}"
                                                         class="text-danger small mb-2" th:errors="*{checkinTimeTemp}">
                                                     </div>
-                                                    <input type="text" class="form-control" th:field="*{checkinTimeTemp}">
+                                                    <input type="text" class="form-control"
+                                                        th:field="*{checkinTimeTemp}">
                                                 </div>
                                                 <div class="form-group mb-2">
                                                     <label for="numberOfPeople"
@@ -196,17 +197,90 @@
                                     </div>
                                 </div>
                                 <!-- レビュー -->
-                                <div class="review">
+                                <div>
                                     <h3 class="mb-4 text-center">レビュー</h3>
-                                    <!-- ログイン済みの時 -->
-                                    <div sec:authrize="isAuthenticated()">
-                                        <!-- レビュー未投稿 -->
-                                        <!-- <div class="text-center mb-3">
-                                            <div th:if="${!hasUserReviewed}">
-                                                <a th:href="@{/store/__${store.getStoreId()}__/reviewRegister}"
-                                                    class="btn text-white shadow-sm nagoyameshi-btn">レビューを投稿する</a>
+
+                                    <!-- レビュー未投稿かつ有料会員の時-->
+                                    <div th:if="${user != null}">
+                                        <div th:if="${user.PaidFlag}">
+                                            <div class="text-center mb-3">
+                                                <div th:if="${!hasUserReviewed}">
+                                                    <a th:href="@{/store/__${store.getStoreId()}__/reviewRegister}"
+                                                        class="btn text-white shadow-sm nagoyameshi-btn">レビューを投稿する</a>
+                                                </div>
                                             </div>
-                                        </div> -->
+                                        </div>
+                                    </div>
+                                    <!-- レビュー本文 -->
+                                    <div id="review-wrapper">
+                                        <div class="review" th:each="review : ${reviews}">
+                                            <div class="reviewTitle">
+                                                <div class="reviewer" th:text="${review.getUserId().getName()}"></div>
+                                                <!-- レビュー未投稿かつ有料会員の時-->
+                                                <div th:if="${user != null}">
+                                                    <div th:if="${user.PaidFlag}">
+                                                        <div th:if="${review.getUserId().getUserId() == userId}">
+                                                            <a class="review-edit"
+                                                                th:href="@{/store/__${store.getStoreId()}__/editReview}">編集</a>
+                                                            <a class="review-delete" href="#" data-bs-toggle="modal"
+                                                                th:data-bs-target="${'#deleteReviewModal' + store.getStoreId()}">削除</a>
+                                                            <!-- 削除用モーダル -->
+                                                            <div class="modal fade"
+                                                                th:id="${'deleteReviewModal' + store.getStoreId()}"
+                                                                tabindex="-1"
+                                                                th:aria-labelledby="${'deleteReviewModalLabel' + store.getStoreId()}">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title"
+                                                                                th:id="${'deleteReviewModalLabel' + store.getStoreId()}"
+                                                                                th:text="${store.getStoreName() + 'のレビューを削除してもよろしいですか？'}">
+                                                                            </h5>
+                                                                            <button type="button" class="btn-close"
+                                                                                data-bs-dismiss="modal"
+                                                                                aria-label="閉じる"></button>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <form method="post"
+                                                                                th:action="@{/store/__${store.getStoreId()}__/deleteReview}">
+                                                                                <button type="submit"
+                                                                                    class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <th:block th:switch="${review.reviewStar}">
+                                                <div class="star-color" th:case=1>
+                                                    &#9733;&#9734;&#9734;&#9734;&#9734;
+                                                </div>
+                                                <div class="star-color" th:case=2>
+                                                    &#9733;&#9733;&#9734;&#9734;&#9734;
+                                                </div>
+                                                <div class="star-color" th:case=3>
+                                                    &#9733;&#9733;&#9733;&#9734;&#9734;
+                                                </div>
+                                                <div class="star-color" th:case=4>
+                                                    &#9733;&#9733;&#9733;&#9733;&#9734;
+                                                </div>
+                                                <div class="star-color" th:case=*>
+                                                    &#9733;&#9733;&#9733;&#9733;&#9733;
+                                                </div>
+                                            </th:block>
+                                            <div th:text="${review.getReviewText()}"></div>
+                                        </div>
+                                    </div>
+                                    <!-- レビューがある時-->
+                                    <div th:if="${reviews.getTotalElements() >= 1}" class="text-center mt-3 mb-3">
+                                        <a th:href="@{/store/__${store.getStoreId()}__/review}">すべてのレビューを見る</a>
+                                    </div>
+                                    <!-- レビューがない時-->
+                                    <div th:if="${reviews.getTotalElements() == 0}" class="text-center mt-3 mb-3">
+                                        <span>まだレビューがありません。</span>
                                     </div>
                                 </div>
                             </div>

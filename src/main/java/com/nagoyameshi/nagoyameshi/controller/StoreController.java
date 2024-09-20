@@ -48,11 +48,11 @@ public class StoreController {
             Model model) {
         StoreEntity store = storeRepository.getReferenceById(storeId);
         List<StoreBusinessTimeEntity> storeBusinessTime = storeBusinessTimeRepository.findByStoreId(store);
-        Page<ReviewEntity> review = reviewRepository.findByStoreId(store, pageable);
+        Page<ReviewEntity> reviews = reviewRepository.findByStoreId(store, pageable);
 
         model.addAttribute("store", store);
         model.addAttribute("storeBusinessTime", storeBusinessTime);
-        model.addAttribute("review", review);
+        model.addAttribute("reviews", reviews);
         model.addAttribute("reservationInputForm", new ReservationInputForm());
 
         if (userDetailsImpl != null) {
@@ -63,8 +63,8 @@ public class StoreController {
             model.addAttribute("user", user);
             model.addAttribute("userId", userDetailsImpl.getUser().getUserId());
 
-            boolean hasUserReviewed = review.stream()
-                    .anyMatch(reviews -> reviews.getUserId().getUserId()
+            boolean hasUserReviewed = reviews.stream()
+                    .anyMatch(review -> review.getUserId().getUserId()
                             .equals(user.getUserId()));
             boolean hasFavorite = favorite.stream()
                     .anyMatch(favorites -> favorites.getUserId().getUserId()
