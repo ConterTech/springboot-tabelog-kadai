@@ -108,6 +108,42 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 有料会員切り替え -->
+                        <h1 class="mb-3 text-center">有料プラン</h1>
+                        <div class="card mb-4">
+                            <div class="card-header text-center">有料プランの内容</div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">・店舗の予約が可能</li>
+                                <li class="list-group-item">・店舗のお気に入り登録が可能</li>
+                                <li class="list-group-item">・レビュー投稿が可能</li>
+                                <li class="list-group-item">・月額300円</li>
+                            </ul>
+                        </div>
+                        <!-- 登録 解約ボタン -->
+                        <div th:if="${user != null}">
+                            <div class="form-group mb-3">
+                                <div th:if="${user.PaidFlag}" class="btn-horizontal">
+                                    <button type="submit"
+                                        class="btn text-white shadow-sm w-100 nagoyameshi-btn">解約する</button>
+                                </div>
+                                <div th:unless="${user.PaidFlag}" class="btn-horizontal">
+                                    <button id="paymentButton"
+                                        class="btn text-white shadow-sm w-100 nagoyameshi-btn">登録する</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- クレカ情報編集 -->
+                        <div th:if="${user != null}">
+                            <div th:if="${user.PaidFlag}">
+                                <h2 class="mb-3 text-center">クレジットカード情報の変更はこちら</h2>
+                                <form method="post" th:action="@{/store}">
+                                    <div class="form-group text-center">
+                                        <button type="submit"
+                                            class="btn text-white shadow-sm w-40 nagoyameshi-btn">変更する</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -118,6 +154,11 @@
     </div>
 
     <div th:replace="~{fragment :: scripts}"></div>
+    <script src="https://js.stripe.com/v3"></script>
+    <script th:inline="javascript">
+        const sessionId = /*[[${sessionId}]]*/"sessionId";                
+    </script>
+    <script th:src="@{/js/stripe.js}"></script>
 </body>
 
 </html>

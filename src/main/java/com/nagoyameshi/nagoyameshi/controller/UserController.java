@@ -1,7 +1,5 @@
 package com.nagoyameshi.nagoyameshi.controller;
 
-import java.lang.reflect.Field;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +16,10 @@ import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.form.UserEditForm;
 import com.nagoyameshi.nagoyameshi.repository.UserRepository;
 import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
+import com.nagoyameshi.nagoyameshi.service.StripeService;
 import com.nagoyameshi.nagoyameshi.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -28,13 +28,17 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
+    private final StripeService stripeService;
 
     // ユーザ情報表示
     @GetMapping
-    public String index(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+    public String index(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, HttpServletRequest httpServletRequest,
+            Model model) {
         UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
+        String sessionId = stripeService.createStripeSession(user, httpServletRequest);
 
         model.addAttribute("user", user);
+        model.addAttribute("sessionId", sessionId);
 
         return "user/index";
     }
@@ -69,4 +73,16 @@ public class UserController {
 
         return "redirect:/user";
     }
+
+    // 有料会員化
+    @GetMapping("/completed")
+    public String completed(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+        UserEntity user = userDetailsImpl.getUser();
+
+        userService.updatePaidFlag(user);
+        model.addAttribute("user", user);
+
+        return "user/index";
+    }
+
 }

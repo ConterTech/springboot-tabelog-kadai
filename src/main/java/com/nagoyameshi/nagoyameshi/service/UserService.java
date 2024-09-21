@@ -53,8 +53,13 @@ public class UserService {
         user.setAge(userEditForm.getAge());
         user.setGender(userEditForm.getGender());
 
+        userRepository.save(user);  
+    }
+
+    public void updatePaidFlag(UserEntity user){
+        user.setPaidFlag(true);
+
         userRepository.save(user);
-        
     }
 
     // メールアドレスが登録済みかどうかチェックする
