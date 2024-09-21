@@ -45,7 +45,15 @@ public class UserService {
     public void update(UserEditForm userEditForm){
         UserEntity user = userRepository.getReferenceById(userEditForm.getUserId());
 
-        user.setName(null);
+        user.setName(userEditForm.getName());
+        user.setPhoneNumber(userEditForm.getPhoneNumber());
+        user.setPostCode(userEditForm.getPostCode());
+        user.setAddress(userEditForm.getAddress());
+        user.setEmail(userEditForm.getEmail());
+        user.setAge(userEditForm.getAge());
+        user.setGender(userEditForm.getGender());
+
+        userRepository.save(user);
         
     }
 

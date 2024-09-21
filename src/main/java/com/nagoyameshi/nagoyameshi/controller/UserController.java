@@ -34,7 +34,7 @@ public class UserController {
     public String index(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
         UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
 
-        model.addAttribute(user);
+        model.addAttribute("user", user);
 
         return "user/index";
     }
@@ -46,20 +46,21 @@ public class UserController {
         UserEditForm userEditForm = new UserEditForm(user.getUserId(), user.getName(), user.getPhoneNumber(),
                 user.getPostCode(), user.getAddress(), user.getEmail(), user.getAge(), user.getGender());
 
-        model.addAttribute(userEditForm);
+        model.addAttribute("userEditForm", userEditForm);
 
         return "user/edit";
     }
 
     // 編集
     @PostMapping("/update")
-    public String update(@ModelAttribute @Validated UserEditForm userEditForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if(userService.isEmailChanged(userEditForm) && userService.isEmailRegistered(userEditForm.getEmail())){
+    public String update(@ModelAttribute @Validated UserEditForm userEditForm, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+        if (userService.isEmailChanged(userEditForm) && userService.isEmailRegistered(userEditForm.getEmail())) {
             FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "既に登録済みのメールアドレスです。");
             bindingResult.addError(fieldError);
         }
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "user/edit";
         }
 
