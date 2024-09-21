@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,7 +43,7 @@ public class AdminStoreController {
 
     // 管理者店舗一覧表示
     @GetMapping
-    public String indexAdmin(Model model,
+    public String index(Model model,
             @PageableDefault(page = 0, size = 10, sort = "storeId", direction = Direction.ASC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword) {
@@ -98,6 +97,8 @@ public class AdminStoreController {
     // 管理者店舗編集画面
     @GetMapping("/{storeId}/edit")
     public String edit(@PathVariable(name = "storeId") Integer storeId, Model model) {
+        List<CategoryEntity> categoryList = new ArrayList<CategoryEntity>();
+        categoryList = categoryRepository.findAll();
         StoreEntity store = storeRepository.getReferenceById(storeId);
         String imageName = store.getImageName();
         StoreEditForm storeEditForm = new StoreEditForm(store.getStoreId(), store.getStoreName(), null,
@@ -105,18 +106,31 @@ public class AdminStoreController {
                 store.getStoreDescribe(), store.getCategoryId(), store.getStartTime(), store.getCloseTime(),
                 store.getRest());
 
+        model.addAttribute("store", store);
         model.addAttribute("imageName", imageName);
         model.addAttribute("storeEditForm", storeEditForm);
+        model.addAttribute("categoryList", categoryList);
 
         return "admin/store/edit";
     }
 
     // 管理者店舗編集
     @PostMapping("/{storeId}/update")
-    public String update(@ModelAttribute @Validated StoreEditForm storeEditForm, BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
-                
+    public String update(@PathVariable(name = "storeId") Integer storeId,
+            @ModelAttribute @Validated StoreEditForm storeEditForm,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+
         if (bindingResult.hasErrors()) {
+            StoreEntity store = storeRepository.getReferenceById(storeId);
+            String imageName = store.getImageName();
+            List<CategoryEntity> categoryList = new ArrayList<CategoryEntity>();
+            categoryList = categoryRepository.findAll();
+
+            model.addAttribute("store", store);
+            model.addAttribute("imageName", imageName);
+            model.addAttribute("storeEditForm", storeEditForm);
+            model.addAttribute("categoryList", categoryList);
+            
             return "admin/store/edit";
         }
 
@@ -130,7 +144,7 @@ public class AdminStoreController {
     @PostMapping("/{storeId}/delete")
     public String delete(@PathVariable(name = "storeId") Integer storeId, RedirectAttributes redirectAttributes) {
         storeRepository.deleteById(storeId);
-        
+
         redirectAttributes.addFlashAttribute("successMessage", "店舗を削除しました。");
 
         return "redirect:/admin/store";

@@ -50,7 +50,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="store : ${storePage}">
+                                <tr th:each="store : ${storePage}" th:if="${store != null}">
                                     <td th:text="${store.getStoreId()}"></td>
                                     <td th:text="${store.getStoreName()}"></td>
                                     <td th:text="${store.getPostCode()}"></td>
@@ -61,7 +61,8 @@
                                             th:data-bs-target="${'#deleteStoreModal' + store.getStoreId()}">削除</a></td>
 
                                     <!-- 削除用モーダル -->
-                                    <div class="modal fade" th:id="${'deleteStoreModal' + store.getStoreId()}" tabindex="-1"
+                                    <div class="modal fade" th:id="${'deleteStoreModal' + store.getStoreId()}"
+                                        tabindex="-1"
                                         th:aria-labelledby="${'deleteStoreModalLabel' + store.getStoreId()}">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
