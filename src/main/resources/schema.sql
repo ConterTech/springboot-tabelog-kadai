@@ -3,6 +3,22 @@
 -- Author       : yamamoto
 -- RDBMS Type   : MySQL
 -- Application  : A5:SQL Mk-2
+
+-- パスワードリセットトークン
+DROP TABLE if exists password_reset_tokens CASCADE;
+
+
+
+CREATE TABLE password_reset_tokens (
+    id INT NOT NULL AUTO_INCREMENT COMMENT 'トークンid',
+    user_id INT NOT NULL COMMENT 'ユーザid',
+    token VARCHAR(255) NOT NULL COMMENT 'トークン',
+    delete_flag boolean DEFAULT 0 COMMENT '削除フラグ',
+    CONSTRAINT password_reset_tokens_PKC PRIMARY KEY (id)
+) COMMENT 'パスワードリセットトークン';
+
+
+
 -- 検証トークン
 DROP TABLE if exists verification_tokens CASCADE;
 
@@ -158,7 +174,7 @@ CREATE TABLE store (
     store_describe TEXT NOT NULL COMMENT '店舗説明',
     start_time TIME NOT NULL COMMENT '営業開始時間',
     close_time TIME NOT NULL COMMENT '営業終了時間',
-    rest VARCHAR(20) NOT NULL COMMENT '定休日', 
+    rest VARCHAR(20) NOT NULL COMMENT '定休日',
     category_id INT COMMENT 'カテゴリid',
     delete_flag boolean DEFAULT 0 COMMENT '削除フラグ',
     CONSTRAINT store_PKC PRIMARY KEY (store_id)

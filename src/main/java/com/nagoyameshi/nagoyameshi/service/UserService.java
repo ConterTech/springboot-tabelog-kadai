@@ -1,5 +1,8 @@
 package com.nagoyameshi.nagoyameshi.service;
 
+import java.util.Map;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +12,7 @@ import com.nagoyameshi.nagoyameshi.form.SignupForm;
 import com.nagoyameshi.nagoyameshi.form.UserEditForm;
 import com.nagoyameshi.nagoyameshi.repository.RoleRepository;
 import com.nagoyameshi.nagoyameshi.repository.UserRepository;
+import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -56,11 +60,27 @@ public class UserService {
         userRepository.save(user);  
     }
 
-    public void updatePaidFlag(UserEntity user){
-        user.setPaidFlag(true);
+    // 有料会員フラグ有効化
+	public void register(Map<String, String> paymentIntentObject) {
+		Integer userId = Integer.valueOf(paymentIntentObject.get("userId"));
 
+		UserEntity user = userRepository.getReferenceById(userId);
+
+		user.setPaidFlag(true);
+		
         userRepository.save(user);
-    }
+	}
+
+    // 有料会員フラグ無効化
+	public void cancel(Map<String, String> paymentIntentObject) {
+		Integer userId = Integer.valueOf(paymentIntentObject.get("userId"));
+
+		UserEntity user = userRepository.getReferenceById(userId);
+
+		user.setPaidFlag(false);
+		
+        userRepository.save(user);
+	}
 
     // メールアドレスが登録済みかどうかチェックする
     public boolean isEmailRegistered(String email) {

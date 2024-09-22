@@ -1,5 +1,6 @@
 package com.nagoyameshi.nagoyameshi.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,8 +14,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.entity.VerificationToken;
+import com.nagoyameshi.nagoyameshi.event.PasswordResetEventPublisher;
 import com.nagoyameshi.nagoyameshi.event.SignupEventPublisher;
+import com.nagoyameshi.nagoyameshi.form.PasswordEmailForm;
 import com.nagoyameshi.nagoyameshi.form.SignupForm;
+import com.nagoyameshi.nagoyameshi.repository.UserRepository;
+import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
 import com.nagoyameshi.nagoyameshi.service.UserService;
 import com.nagoyameshi.nagoyameshi.service.VerificationTokenService;
 
@@ -25,8 +30,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-    private final SignupEventPublisher signupEventPublisher;
     private final VerificationTokenService verificationTokenService;
+    private final SignupEventPublisher signupEventPublisher;
+    private final PasswordResetEventPublisher passwordResetEventPublisher;
+    private final UserRepository userRepository;
 
     // ログイン
     @GetMapping("/login")
@@ -41,10 +48,33 @@ public class AuthController {
         return "auth/signup";
     }
 
-    // パスワード変更
+    // パスワード変更メールアドレス入力画面
     @GetMapping("/password/reset")
-    public String password(){
+    public String password(Model model) {
+        model.addAttribute("passwordEmailForm", new PasswordEmailForm());
         return "auth/password";
+    }
+
+    // パスワード変更メール送信
+    @PostMapping("/password/reset/post")
+    public String reset(@ModelAttribute @Validated PasswordEmailForm passwordEmailForm, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
+        // メールアドレスが未登録なら、BindingResultオブジェクトにエラー内容を追加する
+        if (!userService.isEmailRegistered(passwordEmailForm.getEmail())) {
+            FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "未登録のメールアドレスです。");
+            bindingResult.addError(fieldError);
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "auth/password";
+        }
+
+        UserEntity user = userRepository.findByEmail(passwordEmailForm.getEmail());
+        String requestUrl = new String(httpServletRequest.getRequestURL());
+        passwordResetEventPublisher.publishResetEvent(user, requestUrl);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "ご入力いただいたメールアドレスに認証メールを送信しました。メールに記載されているリンクをクリックし、会員登録を完了してください。");
+        return "redirect:/";
     }
 
     // 新規会員登録

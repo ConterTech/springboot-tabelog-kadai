@@ -35,7 +35,8 @@ public class UserController {
     public String index(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, HttpServletRequest httpServletRequest,
             Model model) {
         UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
-        String sessionId = stripeService.createStripeSession(user, httpServletRequest);
+        Integer userId = user.getUserId();
+        String sessionId = stripeService.createStripeSession(userId, httpServletRequest);
 
         model.addAttribute("user", user);
         model.addAttribute("sessionId", sessionId);
@@ -73,16 +74,4 @@ public class UserController {
 
         return "redirect:/user";
     }
-
-    // 有料会員化
-    @GetMapping("/completed")
-    public String completed(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
-        UserEntity user = userDetailsImpl.getUser();
-
-        userService.updatePaidFlag(user);
-        model.addAttribute("user", user);
-
-        return "user/index";
-    }
-
 }
