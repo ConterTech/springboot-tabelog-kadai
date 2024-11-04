@@ -1,8 +1,5 @@
 package com.nagoyameshi.nagoyameshi.controller;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +11,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.nagoyameshi.nagoyameshi.service.StripeService;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
-import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
-import com.stripe.model.StripeObject;
-import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
-import com.stripe.param.checkout.SessionRetrieveParams;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,24 +39,16 @@ public class StripeWebhookController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        Optional<StripeObject> optionalStripeObject = event.getDataObjectDeserializer().getObject();
-        optionalStripeObject.ifPresent(stripeObject -> {
-            Session session = (Session) stripeObject;
-            SessionRetrieveParams params = SessionRetrieveParams.builder().addExpand("subscription").build();
+        if ("checkout.session.completed".equals(event.getType())) {
             try {
-                session = Session.retrieve(session.getId(), params, null);
-            } catch (StripeException e) {
-                // TODO Auto-generated catch block
+                stripeService.processSessionCompleted(event);
+            } catch (Exception e) {
+                System.err.println("Error processing session completed: " + e.getMessage());
                 e.printStackTrace();
             }
-				Map<String, String> paymentIntentObject = session.getSubscriptionObject().getMetadata();
-                paymentIntentObject.entrySet().forEach(entry -> {
-                    System.out.println(entry.getKey());
-                    System.out.println(entry.getValue());
-                });
-        });
+        }
 
-        if ("checkout.session.completed".equals(event.getType())) {
+        if("customer.subscription.deleted".equals(event.getType())){
             try {
                 stripeService.processSessionCompleted(event);
             } catch (Exception e) {

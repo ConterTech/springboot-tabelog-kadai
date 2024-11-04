@@ -2,17 +2,22 @@ package com.nagoyameshi.nagoyameshi.service;
 
 import java.util.Map;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nagoyameshi.nagoyameshi.entity.RoleEntity;
+import com.nagoyameshi.nagoyameshi.entity.StripeEntity;
 import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.form.SignupForm;
 import com.nagoyameshi.nagoyameshi.form.UserEditForm;
 import com.nagoyameshi.nagoyameshi.repository.RoleRepository;
+import com.nagoyameshi.nagoyameshi.repository.StripeRepository;
 import com.nagoyameshi.nagoyameshi.repository.UserRepository;
-import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final StripeRepository stripeRepository;
     private final PasswordEncoder passwordEncoder;
 
     // ユーザ登録
@@ -46,7 +52,7 @@ public class UserService {
 
     // ユーザ編集
     @Transactional
-    public void update(UserEditForm userEditForm){
+    public void update(UserEditForm userEditForm) {
         UserEntity user = userRepository.getReferenceById(userEditForm.getUserId());
 
         user.setName(userEditForm.getName());
@@ -57,30 +63,35 @@ public class UserService {
         user.setAge(userEditForm.getAge());
         user.setGender(userEditForm.getGender());
 
-        userRepository.save(user);  
+        userRepository.save(user);
     }
 
-    // 有料会員フラグ有効化
-	public void register(Map<String, String> paymentIntentObject) {
-		Integer userId = Integer.valueOf(paymentIntentObject.get("userId"));
+    // 有料会員フラグ有効化 データベース格納
+    @Transactional
+    public void register(Map<String, String> paymentIntentObject, String customerId) {
+        StripeEntity stripe = new StripeEntity();
+        Integer userId = Integer.valueOf(paymentIntentObject.get("userId"));
 
-		UserEntity user = userRepository.getReferenceById(userId);
+        stripe.setUserId(userId);
+        stripe.setCustomerId(customerId);
 
-		user.setPaidFlag(true);
-		
+        UserEntity user = userRepository.getReferenceById(userId);
+        user.setPaidFlag(true);
+
+        stripeRepository.save(stripe);
         userRepository.save(user);
-	}
+    }
 
     // 有料会員フラグ無効化
-	public void cancel(Map<String, String> paymentIntentObject) {
-		Integer userId = Integer.valueOf(paymentIntentObject.get("userId"));
-
-		UserEntity user = userRepository.getReferenceById(userId);
-
-		user.setPaidFlag(false);
-		
+    @Transactional
+    public void cancel(Integer userId) {
+        // フラグ変更有料→無料
+        UserEntity user = userRepository.getReferenceById(userId);
+        user.setPaidFlag(false);
         userRepository.save(user);
-	}
+        // StripeEntity情報削除
+        stripeRepository.deleteById(userId);
+    }
 
     // メールアドレスが登録済みかどうかチェックする
     public boolean isEmailRegistered(String email) {

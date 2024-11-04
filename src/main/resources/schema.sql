@@ -4,6 +4,20 @@
 -- RDBMS Type   : MySQL
 -- Application  : A5:SQL Mk-2
 
+-- Stripe情報
+DROP TABLE if exists stripe CASCADE;
+
+
+
+CREATE TABLE stripe (
+    user_id INT NOT NULL COMMENT 'ユーザid',
+    customer_id VARCHAR(50) NOT NULL COMMENT '顧客id',
+    delete_flag boolean DEFAULT 0 COMMENT '削除フラグ',
+    CONSTRAINT stripe_PKC PRIMARY KEY (user_id)
+) COMMENT 'Stripe情報';
+
+
+
 -- パスワードリセットトークン
 DROP TABLE if exists password_reset_tokens CASCADE;
 

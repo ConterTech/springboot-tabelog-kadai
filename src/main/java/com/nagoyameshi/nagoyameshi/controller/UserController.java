@@ -1,6 +1,15 @@
 package com.nagoyameshi.nagoyameshi.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +46,15 @@ public class UserController {
         UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
         Integer userId = user.getUserId();
         String sessionId = stripeService.createStripeSession(userId, httpServletRequest);
+
+        // ユーザ情報の更新（ログアウト不要）
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+        UserDetails userDetails = new UserDetailsImpl(user, authorities);
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(
+                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+                        userDetails.getAuthorities()));
 
         model.addAttribute("user", user);
         model.addAttribute("sessionId", sessionId);

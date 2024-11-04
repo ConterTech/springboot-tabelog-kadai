@@ -51,6 +51,7 @@ public class StoreController {
 
         if (userDetailsImpl != null) {
             UserEntity user = userDetailsImpl.getUser();
+            // UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
             Optional<FavoriteEntity> favorite = favoriteRepository.findByStoreIdAndUserId(store, user);
 
             model.addAttribute("favorite", favorite);

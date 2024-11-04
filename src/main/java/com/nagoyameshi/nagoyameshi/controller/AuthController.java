@@ -12,16 +12,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.nagoyameshi.nagoyameshi.entity.StripeEntity;
 import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.entity.VerificationToken;
 import com.nagoyameshi.nagoyameshi.event.PasswordResetEventPublisher;
 import com.nagoyameshi.nagoyameshi.event.SignupEventPublisher;
 import com.nagoyameshi.nagoyameshi.form.PasswordEmailForm;
 import com.nagoyameshi.nagoyameshi.form.SignupForm;
+import com.nagoyameshi.nagoyameshi.repository.StripeRepository;
 import com.nagoyameshi.nagoyameshi.repository.UserRepository;
 import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
+import com.nagoyameshi.nagoyameshi.service.StripeService;
 import com.nagoyameshi.nagoyameshi.service.UserService;
 import com.nagoyameshi.nagoyameshi.service.VerificationTokenService;
+import com.stripe.model.PaymentMethod;
+import com.stripe.model.Subscription;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +36,11 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final UserService userService;
     private final VerificationTokenService verificationTokenService;
+    private final StripeService stripeService;
     private final SignupEventPublisher signupEventPublisher;
     private final PasswordResetEventPublisher passwordResetEventPublisher;
     private final UserRepository userRepository;
+    private final StripeRepository stripeRepository;
 
     // ログイン
     @GetMapping("/login")
@@ -122,5 +129,59 @@ public class AuthController {
         }
 
         return "auth/verify";
+    }
+
+    // クレカ編集画面表示
+    @GetMapping("/subscription/edit")
+    public String edit(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+        StripeEntity stripe = stripeRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
+        PaymentMethod paymentMethod = stripeService.getPaymentMethod(stripe.getCustomerId());
+
+        model.addAttribute("card", paymentMethod.getCard());
+        model.addAttribute("accountName", paymentMethod.getBillingDetails().getName());
+
+        return "subscription/edit";
+    }
+
+    // クレカ情報更新
+    @PostMapping("/subscription/update")
+    public String update(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, @RequestParam String paymentMethodId,
+            RedirectAttributes redirectAttributes) {
+        StripeEntity stripe = stripeRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
+
+        try {
+            stripeService.updateCard(stripe.getCustomerId(), paymentMethodId);
+            redirectAttributes.addFlashAttribute("successMessage", "カード情報を変更しました。");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "カード情報の変更に失敗しました。");
+        }
+
+        return "redirect:/";
+    }
+
+    // サブスク解約画面表示
+    @GetMapping("/subscription/cancel")
+    public String cancel() {
+        return "subscription/cancel";
+    }
+
+    // サブスク解約
+    @PostMapping("/subscription/delete")
+    public String delete(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+            RedirectAttributes redirectAttributes) {
+        UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
+        StripeEntity stripe = stripeRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
+
+        Subscription subscription = stripeService.getSubscriptionId(stripe.getCustomerId());
+        if (subscription != null) {
+            stripeService.cancelSubscription(subscription);
+            // 会員ステータスフラグ更新
+            userService.cancel(user.getUserId());
+            redirectAttributes.addFlashAttribute("successMessage", "有料プランを解約しました。");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "有料プランの解約に失敗しました。");
+        }
+
+        return "redirect:/";
     }
 }

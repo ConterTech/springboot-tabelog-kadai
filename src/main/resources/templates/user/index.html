@@ -123,12 +123,12 @@
                         <div th:if="${user != null}">
                             <div class="form-group mb-3">
                                 <div th:if="${user.PaidFlag}" class="btn-horizontal">
-                                    <button type="submit"
-                                        class="btn text-white shadow-sm w-100 nagoyameshi-btn">解約する</button>
+                                    <a th:href="@{/subscription/cancel}"
+                                        class="btn text-white shadow-sm w-100 nagoyameshi-btn">解約</a>
                                 </div>
                                 <div th:unless="${user.PaidFlag}" class="btn-horizontal">
                                     <button id="paymentButton"
-                                        class="btn text-white shadow-sm w-100 nagoyameshi-btn">登録する</button>
+                                        class="btn text-white shadow-sm w-100 nagoyameshi-btn">登録</button>
                                 </div>
                             </div>
                         </div>
@@ -136,12 +136,10 @@
                         <div th:if="${user != null}">
                             <div th:if="${user.PaidFlag}">
                                 <h2 class="mb-3 text-center">クレジットカード情報の変更はこちら</h2>
-                                <form method="post" th:action="@{/store}">
-                                    <div class="form-group text-center">
-                                        <button type="submit"
-                                            class="btn text-white shadow-sm w-40 nagoyameshi-btn">変更する</button>
-                                    </div>
-                                </form>
+                                <div class="d-flex justify-content-center">
+                                    <a th:href="@{/subscription/edit}"
+                                        class="btn text-white shadow-sm mb-3 w-100 nagoyameshi-btn">変更</a>
+                                </div>
                             </div>
                         </div>
                     </div>

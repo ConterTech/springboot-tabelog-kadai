@@ -1,6 +1,7 @@
 package com.nagoyameshi.nagoyameshi.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +9,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +26,9 @@ import com.nagoyameshi.nagoyameshi.entity.StoreEntity;
 import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.repository.CategoryRepository;
 import com.nagoyameshi.nagoyameshi.repository.StoreRepository;
+import com.nagoyameshi.nagoyameshi.repository.UserRepository;
 import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
+import com.stripe.param.ChargeUpdateParams.FraudDetails.UserReport;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class HomeController {
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     // homeページ
     @GetMapping
@@ -40,7 +50,7 @@ public class HomeController {
         Page<StoreEntity> storePage;
         List<CategoryEntity> categoryList = new ArrayList<CategoryEntity>();
         categoryList = categoryRepository.findAll();
-        
+        UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
 
         if (StringUtils.isNotEmpty(store)) {
             storePage = storeRepository.findByStoreNameLike(store + "%", pageable);
@@ -50,6 +60,15 @@ public class HomeController {
         } else {
             storePage = storeRepository.findAll(pageable);
         }
+
+        // ユーザ情報の更新（ログアウト不要）
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+        UserDetails userDetails = new UserDetailsImpl(user, authorities);
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(
+                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+                        userDetails.getAuthorities()));
 
         model.addAttribute("storePage", storePage);
         model.addAttribute("store", store);
