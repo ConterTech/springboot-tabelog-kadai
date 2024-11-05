@@ -50,7 +50,6 @@ public class HomeController {
         Page<StoreEntity> storePage;
         List<CategoryEntity> categoryList = new ArrayList<CategoryEntity>();
         categoryList = categoryRepository.findAll();
-        UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
 
         if (StringUtils.isNotEmpty(store)) {
             storePage = storeRepository.findByStoreNameLike(store + "%", pageable);
@@ -62,13 +61,17 @@ public class HomeController {
         }
 
         // ユーザ情報の更新（ログアウト不要）
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
-        UserDetails userDetails = new UserDetailsImpl(user, authorities);
-        SecurityContext context = SecurityContextHolder.getContext();
-        context.setAuthentication(
-                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-                        userDetails.getAuthorities()));
+
+        if (userDetailsImpl != null) {
+            UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+            UserDetails userDetails = new UserDetailsImpl(user, authorities);
+            SecurityContext context = SecurityContextHolder.getContext();
+            context.setAuthentication(
+                    new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+                            userDetails.getAuthorities()));
+        }
 
         model.addAttribute("storePage", storePage);
         model.addAttribute("store", store);
