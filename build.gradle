@@ -44,3 +44,7 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+bootJar {
+	archiveFileName = 'app.jar' // JARの名前を指定
+}
+
