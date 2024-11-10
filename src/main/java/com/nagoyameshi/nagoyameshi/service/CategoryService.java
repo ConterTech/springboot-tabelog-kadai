@@ -3,7 +3,6 @@ package com.nagoyameshi.nagoyameshi.service;
 import org.springframework.stereotype.Service;
 
 import com.nagoyameshi.nagoyameshi.entity.CategoryEntity;
-import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.form.CategoryEditForm;
 import com.nagoyameshi.nagoyameshi.form.CategoryRegisterForm;
 import com.nagoyameshi.nagoyameshi.repository.CategoryRepository;

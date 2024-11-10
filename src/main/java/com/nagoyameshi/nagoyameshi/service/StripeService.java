@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.nagoyameshi.nagoyameshi.repository.RoleRepository;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -34,7 +33,6 @@ public class StripeService {
 	private String stripeApiKey;
 
 	private final UserService userService;
-	private final RoleRepository roleRepository;
 
 	// セッションを作成し、Stripeに必要な情報を返す
 	public String createStripeSession(Integer userId,

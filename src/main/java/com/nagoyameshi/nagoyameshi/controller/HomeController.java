@@ -28,7 +28,6 @@ import com.nagoyameshi.nagoyameshi.repository.CategoryRepository;
 import com.nagoyameshi.nagoyameshi.repository.StoreRepository;
 import com.nagoyameshi.nagoyameshi.repository.UserRepository;
 import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
-import com.stripe.param.ChargeUpdateParams.FraudDetails.UserReport;
 
 import lombok.RequiredArgsConstructor;
 

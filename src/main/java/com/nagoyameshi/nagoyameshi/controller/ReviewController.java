@@ -23,7 +23,6 @@ import com.nagoyameshi.nagoyameshi.form.ReviewEditForm;
 import com.nagoyameshi.nagoyameshi.form.ReviewRegisterForm;
 import com.nagoyameshi.nagoyameshi.repository.ReviewRepository;
 import com.nagoyameshi.nagoyameshi.repository.StoreRepository;
-import com.nagoyameshi.nagoyameshi.repository.UserRepository;
 import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
 import com.nagoyameshi.nagoyameshi.service.ReviewService;
 
@@ -35,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 public class ReviewController {
     private final ReviewRepository reviewRepository;
     private final StoreRepository storeRepository;
-    private final UserRepository userRepository;
     private final ReviewService reviweService;
 
     // レビュー一覧表示
