@@ -37,4 +37,5 @@ out/
 .vscode/
 
 ### application.propertiesを管理から外す ###
-application.properties
+/src/main/resources/application-development.properties
+
