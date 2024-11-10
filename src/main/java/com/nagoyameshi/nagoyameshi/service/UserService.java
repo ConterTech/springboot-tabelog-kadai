@@ -2,17 +2,13 @@ package com.nagoyameshi.nagoyameshi.service;
 
 import java.util.Map;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nagoyameshi.nagoyameshi.entity.RoleEntity;
 import com.nagoyameshi.nagoyameshi.entity.StripeEntity;
 import com.nagoyameshi.nagoyameshi.entity.UserEntity;
+import com.nagoyameshi.nagoyameshi.form.PasswordResetForm;
 import com.nagoyameshi.nagoyameshi.form.SignupForm;
 import com.nagoyameshi.nagoyameshi.form.UserEditForm;
 import com.nagoyameshi.nagoyameshi.repository.RoleRepository;
@@ -62,6 +58,16 @@ public class UserService {
         user.setEmail(userEditForm.getEmail());
         user.setAge(userEditForm.getAge());
         user.setGender(userEditForm.getGender());
+
+        userRepository.save(user);
+    }
+
+    // パスワード変更
+    @Transactional
+    public void updatePassword(PasswordResetForm passwordResetForm){
+        UserEntity user = userRepository.getReferenceById(passwordResetForm.getUserId());
+
+        user.setPassword(passwordEncoder.encode(passwordResetForm.getPassword()));
 
         userRepository.save(user);
     }

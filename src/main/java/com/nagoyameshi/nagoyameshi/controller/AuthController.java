@@ -12,16 +12,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.nagoyameshi.nagoyameshi.entity.PasswordResetToken;
 import com.nagoyameshi.nagoyameshi.entity.StripeEntity;
 import com.nagoyameshi.nagoyameshi.entity.UserEntity;
 import com.nagoyameshi.nagoyameshi.entity.VerificationToken;
 import com.nagoyameshi.nagoyameshi.event.PasswordResetEventPublisher;
 import com.nagoyameshi.nagoyameshi.event.SignupEventPublisher;
 import com.nagoyameshi.nagoyameshi.form.PasswordEmailForm;
+import com.nagoyameshi.nagoyameshi.form.PasswordResetForm;
 import com.nagoyameshi.nagoyameshi.form.SignupForm;
 import com.nagoyameshi.nagoyameshi.repository.StripeRepository;
 import com.nagoyameshi.nagoyameshi.repository.UserRepository;
 import com.nagoyameshi.nagoyameshi.security.UserDetailsImpl;
+import com.nagoyameshi.nagoyameshi.service.PasswordResetTokenService;
 import com.nagoyameshi.nagoyameshi.service.StripeService;
 import com.nagoyameshi.nagoyameshi.service.UserService;
 import com.nagoyameshi.nagoyameshi.service.VerificationTokenService;
@@ -37,6 +40,7 @@ public class AuthController {
     private final UserService userService;
     private final VerificationTokenService verificationTokenService;
     private final StripeService stripeService;
+    private final PasswordResetTokenService passwordResetTokenService;
     private final SignupEventPublisher signupEventPublisher;
     private final PasswordResetEventPublisher passwordResetEventPublisher;
     private final UserRepository userRepository;
@@ -53,35 +57,6 @@ public class AuthController {
     public String signup(Model model) {
         model.addAttribute("signupForm", new SignupForm());
         return "auth/signup";
-    }
-
-    // パスワード変更メールアドレス入力画面
-    @GetMapping("/password/reset")
-    public String password(Model model) {
-        model.addAttribute("passwordEmailForm", new PasswordEmailForm());
-        return "auth/password";
-    }
-
-    // パスワード変更メール送信
-    @PostMapping("/password/reset/post")
-    public String reset(@ModelAttribute @Validated PasswordEmailForm passwordEmailForm, BindingResult bindingResult,
-            RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
-        // メールアドレスが未登録なら、BindingResultオブジェクトにエラー内容を追加する
-        if (!userService.isEmailRegistered(passwordEmailForm.getEmail())) {
-            FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "未登録のメールアドレスです。");
-            bindingResult.addError(fieldError);
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "auth/password";
-        }
-
-        UserEntity user = userRepository.findByEmail(passwordEmailForm.getEmail());
-        String requestUrl = new String(httpServletRequest.getRequestURL());
-        passwordResetEventPublisher.publishResetEvent(user, requestUrl);
-        redirectAttributes.addFlashAttribute("successMessage",
-                "ご入力いただいたメールアドレスに認証メールを送信しました。メールに記載されているリンクをクリックし、会員登録を完了してください。");
-        return "redirect:/";
     }
 
     // 新規会員登録
@@ -111,6 +86,77 @@ public class AuthController {
                 "ご入力いただいたメールアドレスに認証メールを送信しました。メールに記載されているリンクをクリックし、会員登録を完了してください。");
 
         return "redirect:/";
+    }
+
+    // パスワード変更メールアドレス入力画面
+    @GetMapping("/password/reset")
+    public String password(Model model) {
+        model.addAttribute("passwordEmailForm", new PasswordEmailForm());
+        return "auth/password";
+    }
+
+    // パスワード変更メール送信
+    @PostMapping("/password/reset/post")
+    public String reset(@ModelAttribute @Validated PasswordEmailForm passwordEmailForm, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
+        // メールアドレスが未登録なら、BindingResultオブジェクトにエラー内容を追加する
+        if (!userService.isEmailRegistered(passwordEmailForm.getEmail())) {
+            FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "未登録のメールアドレスです。");
+            bindingResult.addError(fieldError);
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "auth/password";
+        }
+
+        UserEntity user = userRepository.findByEmail(passwordEmailForm.getEmail());
+        String requestUrl = new String(httpServletRequest.getRequestURL());
+        passwordResetEventPublisher.publishResetEvent(user, requestUrl);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "ご入力いただいたメールアドレスに認証メールを送信しました。メールに記載されているリンクをクリックし、パスワードを再登録してください。");
+        return "redirect:/";
+    }
+
+    // パスワード変更画面表示
+    @GetMapping("/password/reset/post/change")
+    public String editPassword(@RequestParam(name = "token") String token, Model model) {
+        PasswordResetToken passwordResetToken = passwordResetTokenService.getPasswordResetToken(token);
+
+        if (passwordResetToken != null) {
+            UserEntity user = passwordResetToken.getUser();
+            Integer userId = user.getUserId();
+            PasswordResetForm passwordResetForm = new PasswordResetForm(user.getUserId(), "null", "null");
+            model.addAttribute("userId", userId);
+            model.addAttribute("passwordResetForm", passwordResetForm);
+
+            return "auth/passwordReset";
+        }
+
+        String errorMessage = "トークンが無効です。";
+        model.addAttribute("errorMessage", errorMessage);
+
+        return "redirect:/";
+    }
+
+    // パスワード変更
+    @PostMapping("password/reset/update")
+    public String updatePassword(@ModelAttribute @Validated PasswordResetForm passwordResetForm,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+
+        // パスワードとパスワード（確認用）の入力値が一致しなければ、BindingResultオブジェクトにエラー内容を追加する
+        if (!userService.isSamePassword(passwordResetForm.getPassword(), passwordResetForm.getPasswordConfirmation())) {
+            FieldError fieldError = new FieldError(bindingResult.getObjectName(), "password", "パスワードが一致しません。");
+            bindingResult.addError(fieldError);
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "auth/passwordReset";
+        }
+
+        userService.updatePassword(passwordResetForm);
+        model.addAttribute("successMessage", "パスワードを変更しました。本ページを閉じてください。");
+
+        return "auth/passwordResetComplete";
     }
 
     // ユーザ登録認証後画面

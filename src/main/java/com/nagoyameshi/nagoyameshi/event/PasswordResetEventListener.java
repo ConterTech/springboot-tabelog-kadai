@@ -26,7 +26,7 @@ public class PasswordResetEventListener {
 
         String recipientAddress = user.getEmail();
         String subject = "メール認証";
-        String confirmationUrl = passwordResetEvent.getRequestUrl() + "/reset?token=" + token;
+        String confirmationUrl = passwordResetEvent.getRequestUrl() + "/change?token=" + token;
         String message = "以下のリンクをクリックしてパスワードを再発行してください。";
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
