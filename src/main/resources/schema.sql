@@ -180,7 +180,7 @@ DROP TABLE if exists store CASCADE;
 CREATE TABLE store (
     store_id INT NOT NULL AUTO_INCREMENT COMMENT '店舗id',
     store_name VARCHAR(30) NOT NULL COMMENT '店舗名',
-    image_name VARCHAR(300) NOT NULL COMMENT '店舗写真',
+    image_name VARCHAR(300) COMMENT '店舗写真',
     post_code VARCHAR(10) NOT NULL COMMENT '郵便番号',
     address VARCHAR(100) NOT NULL COMMENT '住所',
     phone_number VARCHAR(15) NOT NULL COMMENT '電話番号',
