@@ -46,6 +46,5 @@ public class StoreEditForm {
     @NotNull(message = "営業終了時間を入力してください。")
     private LocalTime closeTime;
 
-    @NotEmpty(message = "定休日を入力してください。")
     private String rest;
 }

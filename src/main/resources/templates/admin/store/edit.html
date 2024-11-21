@@ -128,12 +128,20 @@
 
                                 <div class="form-group row mb-3">
                                     <div class="col-md-4">
-                                        <label for="rest" class="col-form-label text-md-left fw-bold">定休日</label>
+                                        <label for="rest"
+                                            class="col-form-label text-md-left fw-bold">定休日<br />「CTRL」を押しながら複数選択可能です</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <div th:if="${#fields.hasErrors('rest')}" class="text-danger small mb-2"
-                                            th:errors="*{rest}"></div>
-                                        <input type="text" class="form-control" th:field="*{rest}">
+                                        <select class="form-control form-select mb-3" multiple name="rest"
+                                            th:field="*{rest}">
+                                            <option value="月">月</option>
+                                            <option value="火">火</option>
+                                            <option value="水">水</option>
+                                            <option value="木">木</option>
+                                            <option value="金">金</option>
+                                            <option value="土">土</option>
+                                            <option value="日">日</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -154,6 +162,8 @@
                                         <label for="category" class="col-form-label text-md-left fw-bold">カテゴリ</label>
                                     </div>
                                     <div class="col-md-8">
+                                        <div th:if="${#fields.hasErrors('categoryId')}" class="text-danger small mb-2"
+                                            th:errors="*{categoryId}"></div>
                                         <select class="form-control form-select mb-3" name="categoryId">
                                             <option value="" hidden>選択してください</option>
                                             <option th:each="category : ${categoryList}"

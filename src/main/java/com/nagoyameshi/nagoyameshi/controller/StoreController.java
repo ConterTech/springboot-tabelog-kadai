@@ -1,5 +1,6 @@
 package com.nagoyameshi.nagoyameshi.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -51,13 +52,10 @@ public class StoreController {
 
         if (userDetailsImpl != null) {
             UserEntity user = userDetailsImpl.getUser();
-            // UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
             Optional<FavoriteEntity> favorite = favoriteRepository.findByStoreIdAndUserId(store, user);
-
-            model.addAttribute("favorite", favorite);
-            model.addAttribute("user", user);
-            model.addAttribute("userId", userDetailsImpl.getUser().getUserId());
-
+            String[] restDays = store.getRest().split(",");
+            String startTime = store.getStartTime().toString();
+            String closeTime = store.getCloseTime().toString();
             boolean hasUserReviewed = reviews.stream()
                     .anyMatch(review -> review.getUserId().getUserId()
                             .equals(user.getUserId()));
@@ -65,6 +63,12 @@ public class StoreController {
                     .anyMatch(favorites -> favorites.getUserId().getUserId()
                             .equals(user.getUserId()));
 
+            model.addAttribute("favorite", favorite);
+            model.addAttribute("user", user);
+            model.addAttribute("userId", userDetailsImpl.getUser().getUserId());
+            model.addAttribute("restDays", restDays);
+            model.addAttribute("startTime", startTime);
+            model.addAttribute("closeTime", closeTime);
             model.addAttribute("hasUserReviewed", hasUserReviewed);
             model.addAttribute("hasFavorite", hasFavorite);
         }

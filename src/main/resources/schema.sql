@@ -188,8 +188,8 @@ CREATE TABLE store (
     store_describe TEXT NOT NULL COMMENT '店舗説明',
     start_time TIME NOT NULL COMMENT '営業開始時間',
     close_time TIME NOT NULL COMMENT '営業終了時間',
-    rest VARCHAR(20) NOT NULL COMMENT '定休日',
-    category_id INT COMMENT 'カテゴリid',
+    rest VARCHAR(20) COMMENT '定休日',
+    category_id INT NOT NULL COMMENT 'カテゴリid',
     delete_flag boolean DEFAULT 0 COMMENT '削除フラグ',
     CONSTRAINT store_PKC PRIMARY KEY (store_id)
 ) COMMENT '店舗情報:店舗情報';

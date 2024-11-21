@@ -155,49 +155,65 @@
                                 </div>
                                 <!-- 予約フォームログイン -->
                                 <div sec:authorize="isAuthenticated()" class="col-lg-4 px-0 ps-lg-4 mb-4">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <form method="get"
-                                                th:action="@{/store/__${store.getStoreId()}__/reservation/input}"
-                                                th:object="${reservationInputForm}">
-                                                <div class="form-group mb-2">
-                                                    <label for="checkinTimeTemp"
-                                                        class="col-form-label text-md-left fw-bold">ご来店日時</label>
-                                                    <div th:if="${#fields.hasErrors('checkinTimeTemp')}"
-                                                        class="text-danger small mb-2" th:errors="*{checkinTimeTemp}">
+                                    <!-- 有料会員 -->
+                                    <div th:if="${user.PaidFlag}">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <form method="get"
+                                                    th:action="@{/store/__${store.getStoreId()}__/reservation/input}"
+                                                    th:object="${reservationInputForm}">
+                                                    <div class="form-group mb-2">
+                                                        <label for="checkinTimeTemp"
+                                                            class="col-form-label text-md-left fw-bold">ご来店日時</label>
+                                                        <div th:if="${#fields.hasErrors('checkinTimeTemp')}"
+                                                            class="text-danger small mb-2"
+                                                            th:errors="*{checkinTimeTemp}">
+                                                        </div>
+                                                        <input type="text" class="form-control"
+                                                            th:field="*{checkinTimeTemp}">
                                                     </div>
-                                                    <input type="text" class="form-control"
-                                                        th:field="*{checkinTimeTemp}">
-                                                </div>
-                                                <div class="form-group mb-2">
-                                                    <label for="numberOfPeople"
-                                                        class="col-form-label text-md-left fw-bold">ご来店人数</label>
-                                                    <div th:if="${#fields.hasErrors('numberOfPeople')}"
-                                                        class="text-danger small mb-2" th:errors="*{numberOfPeople}">
+                                                    <div class="form-group mb-2">
+                                                        <label for="numberOfPeople"
+                                                            class="col-form-label text-md-left fw-bold">ご来店人数</label>
+                                                        <div th:if="${#fields.hasErrors('numberOfPeople')}"
+                                                            class="text-danger small mb-2"
+                                                            th:errors="*{numberOfPeople}">
+                                                        </div>
+                                                        <input type="number" class="form-control"
+                                                            th:field="*{numberOfPeople}" min="1">
                                                     </div>
-                                                    <input type="number" class="form-control"
-                                                        th:field="*{numberOfPeople}" min="1">
-                                                </div>
-                                                <div class="form-group mb-2">
-                                                    <label for="remarks"
-                                                        class="col-form-label text-md-left fw-bold">備考</label>
-                                                    <div th:if="${#fields.hasErrors('remarks')}"
-                                                        class="text-danger small mb-2" th:errors="*{remarks}">
+                                                    <div class="form-group mb-2">
+                                                        <label for="remarks"
+                                                            class="col-form-label text-md-left fw-bold">備考</label>
+                                                        <div th:if="${#fields.hasErrors('remarks')}"
+                                                            class="text-danger small mb-2" th:errors="*{remarks}">
+                                                        </div>
+                                                        <textarea class="form-control" th:field="*{remarks}"></textarea>
                                                     </div>
-                                                    <textarea class="form-control" th:field="*{remarks}"></textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div th:if="${user.PaidFlag}">
-                                                        <button type="submit"
-                                                            class="btn text-white shadow-sm w-100 nagoyameshi-btn">予約する</button>
+                                                    <div class="form-group">
+                                                        <div th:if="${user.PaidFlag}">
+                                                            <button type="submit"
+                                                                class="btn text-white shadow-sm w-100 nagoyameshi-btn">予約する</button>
+                                                        </div>
+                                                        <div th:unless="${user.PaidFlag}">
+                                                            <button type="submit"
+                                                                class="btn text-white shadow-sm w-100 nagoyameshi-btn"
+                                                                disabled>予約する</button>
+                                                        </div>
                                                     </div>
-                                                    <div th:unless="${user.PaidFlag}">
-                                                        <button type="submit"
-                                                            class="btn text-white shadow-sm w-100 nagoyameshi-btn"
-                                                            disabled>予約する</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 無料会員 -->
+                                    <div th:unless="${user.PaidFlag}">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <p class="card-text">予約するには有料会員登録が必要です。</p>
+                                                <button type="submit"
+                                                    class="btn text-white shadow-sm w-100 nagoyameshi-btn"
+                                                    disabled>予約する</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -303,6 +319,11 @@
     <!-- Flatpickr -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+    <script th:inline="javascript">
+        const restDays = /*[[${restDays}]]*/"restDays";  // 定休日の曜日を配列として受け取る
+        const startTime = /*[[${startTime}]]*/"startTime"; // 営業開始時間
+        const closeTime = /*[[${closeTime}]]*/"closeTime"; // 営業終了時間
+    </script>
     <script th:src="@{/js/flatpickr.js}"></script>
 </body>
 
