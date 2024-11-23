@@ -81,9 +81,11 @@ public class ReviewController {
 
         if (bindingResult.hasErrors()) {
             StoreEntity store = storeRepository.getReferenceById(storeId);
+            UserEntity user = userDetailsImpl.getUser();
 
             model.addAttribute("store", store);
             model.addAttribute("reviewRegisterForm", reviewRegisterForm);
+            model.addAttribute("user", user);
 
             return "review/post";
         }
