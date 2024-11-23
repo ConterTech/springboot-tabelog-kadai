@@ -180,11 +180,13 @@ public class AuthController {
     // クレカ編集画面表示
     @GetMapping("/subscription/edit")
     public String edit(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+        UserEntity user = userDetailsImpl.getUser();
         StripeEntity stripe = stripeRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
         PaymentMethod paymentMethod = stripeService.getPaymentMethod(stripe.getCustomerId());
 
         model.addAttribute("card", paymentMethod.getCard());
         model.addAttribute("accountName", paymentMethod.getBillingDetails().getName());
+        model.addAttribute("user", user);
 
         return "subscription/edit";
     }
@@ -207,7 +209,10 @@ public class AuthController {
 
     // サブスク解約画面表示
     @GetMapping("/subscription/cancel")
-    public String cancel() {
+    public String cancel(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+        UserEntity user = userDetailsImpl.getUser();
+        model.addAttribute("user", user);
+
         return "subscription/cancel";
     }
 

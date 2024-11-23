@@ -70,6 +70,7 @@ public class HomeController {
             context.setAuthentication(
                     new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
                             userDetails.getAuthorities()));
+            model.addAttribute("user", user);
         }
 
         model.addAttribute("storePage", storePage);

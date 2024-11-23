@@ -47,6 +47,7 @@ public class ReservationController {
         Page<ReservationEntity> reservationPage = reservationRepository.findByUserId(user, pageable);
 
         model.addAttribute("reservationPage", reservationPage);
+        model.addAttribute("user", user);
 
         return "reservation/index";
     }
@@ -103,6 +104,7 @@ public class ReservationController {
 
         model.addAttribute("store", store);
         model.addAttribute("reservationRegisterForm", reservationRegisterForm);
+        model.addAttribute("user", user);
 
         return "reservation/confirm";
     }

@@ -70,20 +70,24 @@ public class UserController {
                 user.getPostCode(), user.getAddress(), user.getEmail(), user.getAge(), user.getGender());
 
         model.addAttribute("userEditForm", userEditForm);
+        model.addAttribute("user", user);
 
         return "user/edit";
     }
 
     // 編集
     @PostMapping("/update")
-    public String update(@ModelAttribute @Validated UserEditForm userEditForm, BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
+    public String update(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+            @ModelAttribute @Validated UserEditForm userEditForm, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes, Model model) {
         if (userService.isEmailChanged(userEditForm) && userService.isEmailRegistered(userEditForm.getEmail())) {
             FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "既に登録済みのメールアドレスです。");
             bindingResult.addError(fieldError);
         }
 
         if (bindingResult.hasErrors()) {
+            UserEntity user = userRepository.getReferenceById(userDetailsImpl.getUser().getUserId());
+            model.addAttribute("user",user);
             return "user/edit";
         }
 

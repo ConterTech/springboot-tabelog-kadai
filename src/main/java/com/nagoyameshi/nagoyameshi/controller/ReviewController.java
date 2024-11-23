@@ -51,6 +51,7 @@ public class ReviewController {
 
         if (userDetailsImpl != null) {
             model.addAttribute("userId", userDetailsImpl.getUser().getUserId());
+            model.addAttribute("user", userDetailsImpl.getUser());
         }
 
         return "review/index";
@@ -58,9 +59,12 @@ public class ReviewController {
 
     // レビュー投稿画面表示
     @GetMapping("{storeId}/register")
-    public String register(@PathVariable(name = "storeId") Integer storeId, Model model) {
+    public String register(@PathVariable(name = "storeId") Integer storeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
         StoreEntity store = storeRepository.getReferenceById(storeId);
+        UserEntity user = userDetailsImpl.getUser();
 
+        model.addAttribute("user", user);
         model.addAttribute("store", store);
         model.addAttribute("reviewRegisterForm", new ReviewRegisterForm());
 
@@ -105,6 +109,7 @@ public class ReviewController {
 
         model.addAttribute("store", store);
         model.addAttribute("reviewEditForm", reviewEditForm);
+        model.addAttribute("user", user);
 
         return "review/edit";
     }
@@ -117,10 +122,12 @@ public class ReviewController {
             RedirectAttributes redirectAttributes, Model model) {
 
         if (bindingResult.hasErrors()) {
+            UserEntity user = userDetailsImpl.getUser();
             StoreEntity store = storeRepository.getReferenceById(storeId);
 
             model.addAttribute("store", store);
             model.addAttribute("reviewEditForm", reviewEditForm);
+            model.addAttribute("user", user);
 
             return "review/edit";
         }

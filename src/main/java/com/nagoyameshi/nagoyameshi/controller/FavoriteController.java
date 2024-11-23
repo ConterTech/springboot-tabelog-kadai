@@ -48,6 +48,7 @@ public class FavoriteController {
         Page<StoreEntity> storePage = storeRepository.findByStoreIdIn(storeIdList, pageable);
 
         model.addAttribute("storePage", storePage);
+        model.addAttribute("user", user);
 
         return "favorite/index";
     }
